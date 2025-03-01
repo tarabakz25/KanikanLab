@@ -1,8 +1,89 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+
 import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SearchBox from '../components/SearchBox.astro';
+
+import { Image } from 'astro:assets';
+import background from '../assets/bg.webp';
 ---
 
 <MainLayout>
 	<Header />
+	<div class="top-page__background">
+		<div class="image-container">
+			<Image src={background} alt="background" />
+			<div class="overlay"></div>
+		</div>
+		<div class="title-container">
+			<span>Welcome to</span>
+			<span>Kanikan Lab!</span>
+		</div>
+	</div>
+	<div class="article-page">
+		<div class="search-box"><SearchBox /></div>
+	</div>
 </MainLayout>
+
+<style>
+	.top-page__background {
+		width: 100%;
+		box-sizing: border-box;
+		overflow: hidden;
+		position: relative;
+	}
+	.image-container {
+		position: relative;
+		width: 100%;
+	}
+	.image-container img {
+		width: 100%;
+		display: block; /* これを追加して余分なスペースを除去 */
+		object-fit: cover;
+		object-position: center;
+	}
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.3); /* 黒い半透明オーバーレイ */
+	}
+	.title-container {
+		position: absolute;
+		bottom: 2rem;
+		left: 2rem;
+		display: flex;
+		flex-direction: column;
+		z-index: 1; /* テキストをオーバーレイの上に表示 */
+	}
+	.top-page__background span {
+		color: #FFF;
+		font-family: 'Krok', sans-serif;
+		font-size: 60px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+		letter-spacing: 9.6px;
+		display: block;
+		margin-bottom: 0.5rem;
+	}
+	.article-page {
+
+
+
+		margin: 0 auto;
+		width: 100%;
+		text-align: center;
+	}
+	.article-page .search-box {
+
+
+
+		margin: 20px auto;
+		max-width: 600px; /* 必要に応じて調整 */
+		display: inline-block;
+	}
+</style>

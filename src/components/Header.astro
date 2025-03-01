@@ -20,13 +20,16 @@ import SunIcon from '../assets/Sun.svg';   // 太陽アイコンをインポー�
 
 <style>
     .header__inner {
+        position: fixed;
+        z-index: 100;
         padding: 0 80px;
         display: flex;
         height: 80px;
         width: 100%;
         align-items: center;
         justify-content: space-between; /* ロゴと切り替えボタンを両端に配置 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         box-sizing: border-box;
     }
     .header__logo-link {

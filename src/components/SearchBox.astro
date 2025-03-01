@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+---
+
+<div class="search-box__container">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="検索" />
+</div>
+
+<style>
+    .search-box__container {
+        position: relative;
+        width: 300px;
+    }
+    .search-box__container input[type="text"] {
+        width: 100%;
+        padding: 10px 40px 10px 40px;
+        border: 2px solid #ccc;
+        border-radius: 20px;
+        outline: none;
+        font-size: 16px;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+    .search-box__container input[type="text"]:focus {
+        border-color: #888;
+    }
+
+    .search-box__container i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+    }
+</style>
