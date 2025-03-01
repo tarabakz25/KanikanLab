@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<script is:inline>
+			// ページ読み込み時にテーマを初期化
+			(function() {
+				try {
+					const storedTheme = localStorage.getItem('theme');
+					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					const initialTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+					document.documentElement.setAttribute('data-theme', initialTheme);
+					console.log('初期テーマを設定:', initialTheme);
+				} catch (e) {
+					console.error('テーマの初期化に失敗しました:', e);
+					document.documentElement.setAttribute('data-theme', 'light');
+				}
+			})();
+		</script>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>KanikanLab</title>
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-E447BSCFR8"></script>
+		<script is:inline>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				window.dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+			gtag('config', 'G-E447BSCFR8');
+		</script>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="generator" content={Astro.generator}>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p&family=Zen+Old+Mincho&display=swap" rel="stylesheet">
+		<link rel="icon" type="image/x-icon" href="/favicon.ico">
+		<script is:inline>
+			(function (d) {
+				var config = {
+						kitId: 'aan1vqp',
+						scriptTimeout: 3000,
+						async: true,
+					},
+					h = d.documentElement,
+					t = setTimeout(function () {
+						h.className = h.className.replace(/\bwf-loading\b/g, '') + ' wf-inactive';
+					}, config.scriptTimeout),
+					tk = d.createElement('script'),
+					f = false,
+					s = d.getElementsByTagName('script')[0],
+					a;
+				h.className += ' wf-loading';
+				tk.src = 'https://use.typekit.net/' + config.kitId + '.js';
+				tk.async = true;
+				tk.addEventListener('load', function() {
+					f = true;
+					clearTimeout(t);
+					try {
+						Typekit.load(config);
+					} catch (e) {}
+					tk.parentNode?.removeChild(tk);
+				});
+	
+				tk.addEventListener('error', function() {
+					h.className = h.className.replace(/\bwf-loading\b/g, '') + ' wf-inactive';
+					clearTimeout(t);
+				});
+	
+				document.head.appendChild(tk);
+			})(document);
+		</script>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style>
+	body {
+		margin: 0;
+		width: 100%;
+		height: 100%;
+	}
+</style>

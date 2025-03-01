@@ -1,0 +1,22 @@
+
+:root, html[data-theme="light"] {
+    /* ライトモードのデフォルト変数 */
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --hover-bg: rgba(0, 0, 0, 0.05);
+    /* その他必要な変数 */
+}
+
+html[data-theme="dark"] {
+    /* ダークモードの変数 */
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --hover-bg: rgba(255, 255, 255, 0.1);
+    /* その他必要な変数 */
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}

@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import Logo from '../assets/KanikanLab.svg';
+import MoonIcon from '../assets/Moon.svg'; // 月アイコンをインポート
+import SunIcon from '../assets/Sun.svg';   // 太陽アイコンをインポート
+---
+
+<div class="header__inner">
+    <a href="/" class="header__logo-link">
+        <Image src={Logo} alt="KanikanLab" class="header__logo" />
+        <span>KanikanLab</span>
+    </a>
+    <button class="header__theme-change" aria-label="テーマ切り替え">
+        <div class="theme-icon-container">
+            <Image src={MoonIcon} alt="ダークモード" class="theme-icon moon-icon" />
+            <Image src={SunIcon} alt="ライトモード" class="theme-icon sun-icon" />
+        </div>
+    </button>
+</div>
+
+<style>
+    .header__inner {
+        padding: 0 80px;
+        display: flex;
+        height: 80px;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between; /* ロゴと切り替えボタンを両端に配置 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+    }
+    .header__logo-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-color);
+        text-decoration: none;
+    }
+    .header__inner .header__logo {
+        width: 40px;
+        height: 40px;
+    }
+    .header__inner span {
+        font-family: 'Krok', sans-serif;
+        font-size: 24px;
+        text-decoration: none;
+        letter-spacing: 0.05em;
+    }
+    .header__theme-change {
+        background: none;
+        border: 1px solid var(--text-color);
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s ease;
+    }
+    .header__theme-change:hover {
+        background-color: var(--hover-bg);
+    }
+    .header__theme-change:active {
+        transform: scale(0.95);
+    }
+    .theme-icon-container {
+        position: relative;
+        width: 20px;
+        height: 20px;
+    }
+    .theme-icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+    }
+    
+    /* テーマに応じてアイコンを表示/非表示 */
+    .moon-icon, .sun-icon {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    html[data-theme="light"] .moon-icon {
+        opacity: 1;
+    }
+    html[data-theme="dark"] .sun-icon {
+        opacity: 1;
+    }
+</style>
+
+<script is:inline>
+    // テーマ切り替え機能の実装
+    document.addEventListener('DOMContentLoaded', () => {
+        const themeToggle = document.querySelector('.header__theme-change');
+        
+        if (themeToggle) {
+            // テーマ切り替えボタンのクリックイベント
+            themeToggle.addEventListener('click', () => {
+                const root = document.documentElement;
+                const currentTheme = root.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                console.log('テーマを切り替え:', currentTheme, '->', newTheme);
+                
+                // テーマを切り替え
+                root.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        } else {
+            console.error('テーマ切り替えボタンが見つかりません');
+        }
+    });
+</script>
