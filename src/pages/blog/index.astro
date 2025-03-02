@@ -1,0 +1,83 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Article from '../../components/Article.astro';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE } from '../../consts';
+
+// Get all blog posts sorted by publication date (newest first)
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<MainLayout>
+    <div class="blog-index">
+        <div class="blog-header">
+            <h1>{SITE_TITLE} ブログ</h1>
+            <p>最新の記事や情報をお届けします</p>
+        </div>
+
+        <div class="blog-grid">
+            {sortedPosts.map((post) => (
+                <Article post={post} />
+            ))}
+        </div>
+
+        {sortedPosts.length === 0 && (
+            <div class="no-posts">
+                <p>まだ記事がありません。</p>
+                <p>もうしばらくお待ちください。</p>
+            </div>
+        )}
+    </div>
+</MainLayout>
+
+<style>
+    .blog-index {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .blog-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .blog-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--color-text);
+    }
+
+    .blog-header p {
+        font-size: 1.2rem;
+        color: var(--color-text-light);
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .no-posts {
+        text-align: center;
+        padding: 3rem 0;
+        color: var(--color-text-light);
+    }
+
+    .no-posts p {
+        margin: 0.5rem 0;
+        font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .blog-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
