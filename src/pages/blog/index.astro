@@ -1,6 +1,7 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
 import Article from '../../components/Article.astro';
+import Sidebar from '../../components/Sidebar.astro';
 import { getCollection } from 'astro:content';
 import { SITE_TITLE } from '../../consts';
 
@@ -10,48 +11,64 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
 ---
 
 <MainLayout>
-    <div class="blog-index">
-        <div class="blog-header">
-            <h1>{SITE_TITLE} ブログ</h1>
-            <p>最新の記事や情報をお届けします</p>
-        </div>
-
-        <div class="blog-grid">
-            {sortedPosts.map((post) => (
-                <Article post={post} />
-            ))}
-        </div>
-
-        {sortedPosts.length === 0 && (
-            <div class="no-posts">
-                <p>まだ記事がありません。</p>
-                <p>もうしばらくお待ちください。</p>
+    <div class="blog-container">
+        <div class="blog-content">
+            <div class="blog-header">
+                <h1>{SITE_TITLE} ブログ</h1>
+                <p>最新の記事や情報をお届けします</p>
+                <a href="/blog/editor" class="create-post-btn">
+                    <i class="fas fa-plus"></i> 新しい記事を作成
+                </a>
             </div>
-        )}
+
+            <div class="blog-grid">
+                {sortedPosts.map((post) => (
+                    <Article post={post} />
+                ))}
+            </div>
+
+            {sortedPosts.length === 0 && (
+                <div class="no-posts">
+                    <p>まだ記事がありません。</p>
+                    <p>もうしばらくお待ちください。</p>
+                </div>
+            )}
+        </div>
+        
+        <div class="blog-sidebar">
+            <Sidebar />
+        </div>
     </div>
 </MainLayout>
 
 <style>
-    .blog-index {
+    .blog-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 2rem 1rem;
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        gap: 2rem;
+    }
+
+    .blog-content {
+        width: 100%;
     }
 
     .blog-header {
-        text-align: center;
         margin-bottom: 3rem;
     }
 
     .blog-header h1 {
         font-size: 2.5rem;
         margin-bottom: 0.5rem;
-        color: var(--color-text);
+        color: var(--text-color);
     }
 
     .blog-header p {
         font-size: 1.2rem;
-        color: var(--color-text-light);
+        color: var(--text-color);
+        opacity: 0.8;
     }
 
     .blog-grid {
@@ -63,15 +80,41 @@ const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDa
     .no-posts {
         text-align: center;
         padding: 3rem 0;
-        color: var(--color-text-light);
+        color: var(--text-color);
+        opacity: 0.8;
     }
 
     .no-posts p {
         margin: 0.5rem 0;
         font-size: 1.2rem;
     }
+    
+    .create-post-btn {
+        display: inline-flex;
+        align-items: center;
+        background-color: #4a7dff;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        margin-top: 1rem;
+        transition: background-color 0.3s ease;
+    }
+    
+    .create-post-btn:hover {
+        background-color: #3a6ae0;
+    }
+    
+    .create-post-btn i {
+        margin-right: 0.5rem;
+    }
 
     @media (max-width: 768px) {
+        .blog-container {
+            grid-template-columns: 1fr;
+        }
+        
         .blog-grid {
             grid-template-columns: 1fr;
         }

@@ -3,6 +3,7 @@ title: 'Kanikan Labへようこそ'
 description: 'これは最初のブログ投稿です。Astroを使ったブログ機能の紹介をします。'
 pubDate: '2025-03-02'
 heroImage: '/src/assets/image-template.png'
+category: 'Astro'
 ---
 
 # Kanikan Labへようこそ

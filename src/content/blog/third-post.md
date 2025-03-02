@@ -3,6 +3,7 @@ title: 'Astroでのウェブサイト最適化テクニック'
 description: 'Astroを使ったウェブサイトのパフォーマンス最適化方法について解説します。'
 pubDate: '2025-02-28'
 heroImage: '/src/assets/image-template.png'
+category: 'パフォーマンス'
 ---
 
 # Astroでのウェブサイト最適化テクニック

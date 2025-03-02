@@ -1,0 +1,116 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import Article from '../../../components/Article.astro';
+import Sidebar from '../../../components/Sidebar.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const posts = await getCollection('blog');
+    const categories = [...new Set(posts.map(post => post.data.category).filter(Boolean))];
+    
+    return categories.map(category => ({
+        params: { category },
+        props: { 
+            category,
+            posts: posts
+                .filter(post => post.data.category === category)
+                .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+        },
+    }));
+}
+
+const { category, posts } = Astro.props;
+---
+
+<MainLayout>
+    <div class="blog-container">
+        <div class="blog-content">
+            <div class="category-header">
+                <h1>カテゴリー: {category}</h1>
+                <p>{posts.length} 件の記事</p>
+            </div>
+
+            <div class="blog-grid">
+                {posts.map((post) => (
+                    <Article post={post} />
+                ))}
+            </div>
+
+            <div class="back-link-container">
+                <a href="/blog" class="back-link">← ブログ一覧に戻る</a>
+            </div>
+        </div>
+        
+        <div class="blog-sidebar">
+            <Sidebar />
+        </div>
+    </div>
+</MainLayout>
+
+<style>
+    .blog-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        gap: 2rem;
+    }
+
+    .blog-content {
+        width: 100%;
+    }
+
+    .category-header {
+        margin-bottom: 2rem;
+    }
+
+    .category-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .category-header p {
+        font-size: 1rem;
+        color: var(--text-color);
+        opacity: 0.8;
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .back-link-container {
+        margin-top: 2rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        color: var(--text-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: var(--hover-bg);
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .blog-container {
+            grid-template-columns: 1fr;
+        }
+
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .category-header h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>

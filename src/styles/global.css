@@ -5,6 +5,7 @@
     --text-color: #000000;
     --hover-bg: rgba(0, 0, 0, 0.05);
     /* その他必要な変数 */
+    --font-japanese: "Apple SD Gothic Neo", sans-serif;
 }
 
 html[data-theme="dark"] {
@@ -20,3 +21,4 @@ body {
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
+

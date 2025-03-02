@@ -1,7 +1,6 @@
 ---
 import MainLayout from './MainLayout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import Sidebar from '../components/Sidebar.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 
 interface Props {
@@ -10,46 +9,67 @@ interface Props {
     pubDate: Date;
     updatedDate?: Date;
     heroImage?: string;
+    category?: string;
 }
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, category } = Astro.props;
 ---
-
 <MainLayout>
-    <article class="blog-post">
-        <div class="blog-header">
-            {heroImage && (
-                <div class="hero-image">
-                    <img src={import.meta.env.BASE_URL + heroImage.replace(/^\//, '')} alt={title} />
-                </div>
-            )}
-            <div class="blog-meta">
-                <h1 class="blog-title">{title}</h1>
-                <div class="blog-date">
-                    <span>公開日: <FormattedDate date={pubDate} /></span>
-                    {updatedDate && (
-                        <span class="updated-date">
-                            更新日: <FormattedDate date={updatedDate} />
-                        </span>
+    <div class="blog-container">
+        <div class="blog-main">
+            <article class="blog-post">
+                <div class="blog-header">
+                    {heroImage && (
+                        <div class="hero-image">
+                            <img src={import.meta.env.BASE_URL + heroImage.replace(/^\//, '')} alt={title} />
+                        </div>
                     )}
+                    <div class="blog-meta">
+                        <h1 class="blog-title">{title}</h1>
+                        <div class="blog-date">
+                            <span>公開日: <FormattedDate date={pubDate} /></span>
+                            {updatedDate && (
+                                <span class="updated-date">
+                                    更新日: <FormattedDate date={updatedDate} />
+                                </span>
+                            )}
+                        </div>
+                        {category && (
+                            <div class="blog-category">
+                                <a href={`/blog/category/${category}`} class="category-link">
+                                    {category}
+                                </a>
+                            </div>
+                        )}
+                        <p class="blog-description">{description}</p>
+                    </div>
                 </div>
-                <p class="blog-description">{description}</p>
-            </div>
+                <div class="blog-content">
+                    <slot />
+                </div>
+                <div class="blog-footer">
+                    <a href="/blog" class="back-link">← ブログ一覧に戻る</a>
+                </div>
+            </article>
         </div>
-        <div class="blog-content">
-            <slot />
+        
+        <div class="blog-sidebar">
+            <Sidebar />
         </div>
-        <div class="blog-footer">
-            <a href="/blog" class="back-link">&larr; ブログ一覧に戻る</a>
-        </div>
-    </article>
+    </div>
 </MainLayout>
-
 <style>
-    .blog-post {
-        max-width: 800px;
+    .blog-container {
+        max-width: 1200px;
         margin: 0 auto;
         padding: 2rem 1rem;
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        gap: 2rem;
+    }
+    
+    .blog-post {
+        width: 100%;
     }
 
     .blog-header {
@@ -77,12 +97,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     .blog-title {
         font-size: 2.5rem;
         margin: 0 0 1rem 0;
-        color: var(--color-text);
+        color: var(--text-color);
     }
 
     .blog-date {
         font-size: 0.9rem;
-        color: var(--color-text-light);
+        color: var(--text-color);
+        opacity: 0.8;
         margin-bottom: 1rem;
         display: flex;
         justify-content: center;
@@ -90,12 +111,33 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     }
 
     .updated-date {
-        color: var(--color-primary);
+        color: var(--text-color);
+        font-weight: bold;
+    }
+
+    .blog-category {
+        margin-bottom: 1rem;
+    }
+
+    .category-link {
+        display: inline-block;
+        background-color: var(--hover-bg);
+        color: var(--text-color);
+        padding: 0.3rem 0.8rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .category-link:hover {
+        background-color: var(--hover-bg);
+        opacity: 0.8;
     }
 
     .blog-description {
         font-size: 1.1rem;
-        color: var(--color-text);
+        color: var(--text-color);
         line-height: 1.6;
         margin-bottom: 2rem;
     }
@@ -103,19 +145,19 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     .blog-content {
         font-size: 1.1rem;
         line-height: 1.8;
-        color: var(--color-text);
+        color: var(--text-color);
     }
 
     .blog-content :global(h2) {
         font-size: 1.8rem;
         margin: 2rem 0 1rem 0;
-        color: var(--color-text);
+        color: var(--text-color);
     }
 
     .blog-content :global(h3) {
         font-size: 1.5rem;
         margin: 1.5rem 0 1rem 0;
-        color: var(--color-text);
+        color: var(--text-color);
     }
 
     .blog-content :global(p) {
@@ -129,14 +171,15 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     }
 
     .blog-content :global(blockquote) {
-        border-left: 4px solid var(--color-primary);
+        border-left: 4px solid var(--hover-bg);
         padding-left: 1rem;
         margin-left: 0;
-        color: var(--color-text-light);
+        color: var(--text-color);
+        opacity: 0.8;
     }
 
     .blog-content :global(pre) {
-        background-color: var(--color-bg-code);
+        background-color: var(--hover-bg);
         padding: 1rem;
         border-radius: 8px;
         overflow-x: auto;
@@ -145,7 +188,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
     .blog-content :global(code) {
         font-family: monospace;
-        background-color: var(--color-bg-code);
+        background-color: var(--hover-bg);
         padding: 0.2rem 0.4rem;
         border-radius: 4px;
     }
@@ -161,12 +204,12 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     .blog-footer {
         margin-top: 3rem;
         padding-top: 1.5rem;
-        border-top: 1px solid var(--color-border);
+        border-top: 1px solid var(--hover-bg);
     }
 
     .back-link {
         display: inline-block;
-        color: var(--color-primary);
+        color: var(--text-color);
         text-decoration: none;
         font-weight: 500;
     }
@@ -176,8 +219,8 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     }
 
     @media (max-width: 768px) {
-        .blog-post {
-            padding: 1rem;
+        .blog-container {
+            grid-template-columns: 1fr;
         }
 
         .hero-image {
