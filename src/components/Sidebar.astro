@@ -1,5 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
+import  WriterLogo  from '../assets/placeholder-hero.png';
+
 
 // Get all categories from blog posts
 const allPosts = await getCollection('blog');
@@ -11,11 +13,12 @@ const allCategories = [...new Set(allPosts.map(post => (post.data as any).catego
     <div class="sidebar-section writer-profile">
         <h3 class="sidebar-title">ライター紹介</h3>
         <div class="writer-content">
-            <img src="/placeholder-hero.jpg" alt="Writer" class="writer-image" />
-            <h4 class="writer-name">Kanikan</h4>
+            <img src={WriterLogo.src} alt="Writer" class="writer-image" />
+            <h4 class="writer-name">Kizuki</h4>
             <p class="writer-bio">
-                Kanikan Labの運営者。テクノロジーとデザインに情熱を持つクリエイター。
-                新しい技術やアイデアを探求し、共有することを楽しんでいます。
+                神山まるごと高専一期生。 東京→徳島
+                旅行、生成AI、テクノロジーを追って日々精進中。
+                主にプログラミング、生成AIに関する情報を発信中。時々趣味の話が上がるかも？
             </p>
             <div class="social-links">
                 <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
