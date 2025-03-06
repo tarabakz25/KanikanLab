@@ -1,0 +1,177 @@
+---
+// TableOfContents.astro
+export interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+---
+
+<div class="toc-container">
+  <div class="toc-header">
+    <h3>目次</h3>
+  </div>
+  <nav class="toc">
+    <ul>
+      {headings.map((heading) => (
+        <li class={`toc-item toc-depth-${heading.depth}`}>
+          <a href={`#${heading.slug}`}>{heading.text}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</div>
+
+<button class="toc-mobile-toggle">
+  <i class="fas fa-list-ul"></i>
+</button>
+
+<style>
+  /* 目次のスタイル */
+  .toc-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    top: 100px;
+  }
+  
+  .toc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--hover-bg);
+  }
+  
+  .toc-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text-color);
+  }
+  
+  .toc-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+  }
+  
+  .toc {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+  
+  .toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .toc-item {
+    margin-bottom: 0.5rem;
+  }
+  
+  .toc-item a {
+    color: var(--text-color);
+    text-decoration: none;
+    display: block;
+    padding: 0.3rem 0;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+  }
+  
+  .toc-item a:hover {
+    color: var(--hover-bg);
+  }
+  
+  .toc-depth-1 {
+    font-weight: bold;
+  }
+  
+  .toc-depth-2 {
+    padding-left: 1rem;
+  }
+  
+  .toc-depth-3 {
+    padding-left: 2rem;
+    font-size: 0.9rem;
+  }
+  
+  /* モバイル用トグルボタン */
+  .toc-mobile-toggle {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 100;
+  }
+  
+  @media (max-width: 768px) {
+    .toc-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      width: 100%;
+      height: 100%;
+      max-height: none;
+      margin: 0;
+      border-radius: 0;
+      overflow-y: auto;
+    }
+    
+    .toc-container.active {
+      display: block;
+    }
+    
+    .toc-mobile-toggle {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  // 目次の表示/非表示を切り替えるスクリプト
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocMobileToggle = document.querySelector('.toc-mobile-toggle');
+    const tocContainer = document.querySelector('.toc-container');
+    const tocToggleBtn = document.querySelector('.toc-toggle-btn');
+    
+    if (tocMobileToggle && tocContainer && tocToggleBtn) {
+      tocMobileToggle.addEventListener('click', () => {
+        tocContainer.classList.add('active');
+      });
+      
+      tocToggleBtn.addEventListener('click', () => {
+        tocContainer.classList.remove('active');
+      });
+    }
+    
+    // 目次のリンクをクリックしたときに目次を閉じる（モバイル時）
+    const tocLinks = document.querySelectorAll('.toc-item a');
+    tocLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768 && tocContainer) {
+          tocContainer.classList.remove('active');
+        }
+      });
+    });
+  });
+</script>

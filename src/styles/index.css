@@ -1,0 +1,122 @@
+.top-page__background {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+}
+.image-container {
+    position: relative;
+    width: 100%;
+    max-height: 700px; /* 画像の最大高さを制限 */
+    overflow: hidden; /* はみ出た部分を隠す */
+}
+.image-container img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    max-height: 700px; /* 画像自体の最大高さも制限 */
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* 黒い半透明オーバーレイ */
+}
+.title-container {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 1; /* テキストをオーバーレイの上に表示 */
+}
+.top-page__background span {
+    color: #FFF;
+    font-family: 'Krok', sans-serif;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 9.6px;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+.article-page {
+    margin: 0 auto;
+    padding: 0 80px;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    display: flex;
+
+}
+.article-page .article-container .search-box {
+    margin: 80px auto 60px;
+    max-width: 600px; /* 必要に応じて調整 */
+    display: inline-block;
+}
+.article-page .side-bar {
+    width: 300px;
+    position: sticky;
+    margin-top: 50px;
+}
+
+.article-container {
+    max-width: 1200px;
+    width: 1000px;
+    margin: 0 auto 80px;
+    padding: 0 1rem;
+}
+
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--color-text);
+}
+
+.recent-posts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.no-posts {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--color-text-light);
+    grid-column: 1 / -1;
+}
+
+.view-all {
+    margin-top: 2rem;
+}
+
+.view-all-link {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.view-all-link:hover {
+    background-color: var(--color-primary-dark);
+}
+
+@media (max-width: 768px) {
+    .recent-posts {
+        grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+}

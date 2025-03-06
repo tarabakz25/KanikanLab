@@ -1,0 +1,164 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+import { Image } from 'astro:assets';
+import Logo from '../assets/KanikanLab.svg';
+import WriterIcon from '../assets/WriterIcon.png';
+
+import '../styles/about.css';
+
+// MY GEARS
+const gears = ['Arc', 'Raycast', 'Cursor', 'Obsidian', 'Notion']
+const languages = ['C++', 'Python', 'HTML/CSS', 'JavaScript', 'Swift']
+const frameworks = ['Astro', 'Flask', 'SwiftUI', 'SDL', 'Siv3D']
+---
+<MainLayout>
+    <div class="page-container">
+        <div class="top-page">
+            <p class="top-page__message" id="typing-text"></p>
+            <div class="top-page__logo">
+                <Image src={Logo} alt="Logo" />
+                <span>KanikanLab</span>
+            </div>
+        </div>
+        <div class="about-KanikanLab">
+            <h1>About KanikanLab</h1>
+            <p>KanikanLabは、エンターテインメントとテクノロジーをテーマにしたブログサイトです。
+                テクノロジー、プログラミング、便利ツールや趣味の話をメインに発信していきます。
+                ごゆっくりご覧ください！
+            </p>
+        </div>
+        <div class="introduction-writer">
+            <h1>Profile</h1>
+            <div class="writer-container">
+                <Image src={WriterIcon} alt="WriterIcon" class="writer-icon" />
+                <div class="explain-writer">
+                    <h2>Kizuki</h2>
+                    <p>KanikanLabの創設者。神山まるごと高専に一期生として入学。
+                        テクノロジー、デザインを主体に勉強し、日々精進中。
+                        競プロ、ゲーム、キャンプが好き。
+                        神山町のソロプレナーを目指してます。
+                    </p>
+                </div>
+            </div>
+            <div class="follow-me">
+                <h3>\ Contact /</h3>
+                <div class="follow-me-container">
+                    <a href="https://x.com/kz25_kmc" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://github.com/tarabakz25" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="my-tools">
+                <h1>My Items</h1>
+                <h3>Gears</h3>
+                <div class="writer-skill">
+                    {gears.map(gear => <p>{gear}</p>)}
+                </div>
+                <h3>Languages</h3>
+                <div class="writer-skill">
+                    {languages.map(language => <p>{language}</p>)}
+                </div>
+                <h3>Frameworks</h3>
+                <div class="writer-skill">
+                    {frameworks.map(framework => <p>{framework}</p>)}
+                </div>
+            </div>
+        </div>
+        <div class="history">
+            <h1>History</h1>
+            <div class="timeline">
+                <div class="timeline-item hidden">
+                    <div class="timeline-date">Apr 2O23</div>
+                    <div class="timeline-content">
+                        <h3>神山まるごと高専入学</h3>
+                    </div>
+                </div>
+                <div class="timeline-item hidden">
+                    <div class="timeline-date">Aug 2024</div>
+                    <div class="timeline-content">
+                        <h3>TwoGate DevCamp 2024 Summer TwoGate賞</h3>
+                    </div>
+                </div>
+                <div class="timeline-item hidden">
+                    <div class="timeline-date">Aug 2024</div>
+                    <div class="timeline-content">
+                        <h3>高専プログラミングコンテスト第35回奈良大会 競技部門出場</h3>
+                    </div>
+                </div>
+                <div class="timeline-item hidden">
+                    <div class="timeline-date">Jan 2025</div>
+                    <div class="timeline-content">
+                        <h3>学内ハッカソン 特別賞</h3>
+                    </div>
+                </div>
+                <div class="timeline-item hidden">
+                    <div class="timeline-date">Mar 2025</div>
+                    <div class="timeline-content">
+                        <h3>個人ブログサイト"KanikanLab"設立</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="finally">
+            <h1>Finally</h1>
+            <div class="buy-me-a-coffee-container">
+                <p class="coffee-message">このブログが気に入っていただけたら、是非コーヒー一杯分のサポートをお願いします！
+                    皆様のサポートで、KanikanLabのより良いコンテンツ作りが継続できます。
+                    ここで得られた資金は、インフラ費用、生成AIのAPI費用などに使わせていただきます。
+                </p>
+                <a href="https://www.buymeacoffee.com/aikikizukiz"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=🏕️&slug=aikikizukiz&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff" /></a>
+                <p class="thank-you-message">サポートしてくださる方々へ心より感謝申し上げます。</p>
+            </div>
+        </div>
+    </div>
+</MainLayout>
+
+<script>
+    const text = "Entertainment x Technology";
+    const typingElement = document.getElementById('typing-text');
+    let i = 0;
+    let isDeleting = false;
+    let currentText = '';
+    
+    function type() {
+        if (i < text.length) {
+            currentText += text.charAt(i);
+            typingElement.textContent = currentText;
+            i++;
+            setTimeout(type, 100); // タイピング速度を調整（ミリ秒）
+        } else {
+            // タイピングが終わったらカーソルを点滅させるだけに
+            setTimeout(() => {
+                typingElement.classList.add('cursor-hidden');
+            }, 0);
+        }
+    }
+    
+    // ページ読み込み時にタイピングアニメーションを開始
+    window.addEventListener('load', () => {
+        setTimeout(type, 500);
+    });
+
+    // 既存のスクリプトに追加
+    document.addEventListener('DOMContentLoaded', () => {
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // 一度表示されたら監視を解除（オプション）
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 }); // 20%が見えたら発火
+        
+        timelineItems.forEach(item => {
+            observer.observe(item);
+        });
+    });
+</script>

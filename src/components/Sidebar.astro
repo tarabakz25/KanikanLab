@@ -5,13 +5,12 @@ import  WriterLogo  from '../assets/placeholder-hero.png';
 
 // Get all categories from blog posts
 const allPosts = await getCollection('blog');
-// TypeScript workaround: use type assertion to access the category property
-const allCategories = [...new Set(allPosts.map(post => (post.data as any).category).filter(Boolean))];
+// Extract all unique categories from all posts
+const allCategories = [...new Set(allPosts.flatMap(post => post.data.categories || []))];
 ---
 
 <div class="sidebar">
     <div class="sidebar-section writer-profile">
-        <h3 class="sidebar-title">ライター紹介</h3>
         <div class="writer-content">
             <img src={WriterLogo.src} alt="Writer" class="writer-image" />
             <h4 class="writer-name">Kizuki</h4>
@@ -20,15 +19,13 @@ const allCategories = [...new Set(allPosts.map(post => (post.data as any).catego
                 旅行、生成AI、テクノロジーを追って日々精進中。
                 主にプログラミング、生成AIに関する情報を発信中。時々趣味の話が上がるかも？
             </p>
+            <p class="follow-me">\ Follow me! /</p>
             <div class="social-links">
-                <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
+                <a href="https://x.com/kz25_kmc" target="_blank" rel="noopener noreferrer">
                     <i class="fab fa-twitter"></i>
                 </a>
-                <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
+                <a href="https://github.com/tarabakz25" target="_blank" rel="noopener noreferrer">
                     <i class="fab fa-github"></i>
-                </a>
-                <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-linkedin"></i>
                 </a>
             </div>
         </div>
@@ -37,12 +34,11 @@ const allCategories = [...new Set(allPosts.map(post => (post.data as any).catego
     <div class="sidebar-section">
         <h3 class="sidebar-title">サポートする</h3>
         <div class="support-content">
-            <a href="https://www.buymeacoffee.com/" target="_blank" rel="noopener noreferrer" class="bmc-button">
-                <i class="fas fa-coffee"></i>
-                Buy Me A Coffee
-            </a>
+            <div class="bmc-container">
+                <a href="https://www.buymeacoffee.com/aikikizukiz"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=🏕️&slug=aikikizukiz&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff" /></a>
+            </div>
             <p class="support-text">
-                コンテンツを楽しんでいただけましたか？コーヒー1杯分のサポートで、より良いコンテンツ作りを応援してください。
+                コンテンツが役に立ったと思ったら、コーヒー1杯分のサポートで、より良いコンテンツ作りを応援してください！
             </p>
         </div>
     </div>
@@ -50,10 +46,10 @@ const allCategories = [...new Set(allPosts.map(post => (post.data as any).catego
     <div class="sidebar-section">
         <h3 class="sidebar-title">カテゴリー</h3>
         <ul class="category-list">
-            {allCategories.map(category => (
+            {allCategories.map(categories => (
                 <li>
-                    <a href={`/blog/category/${category}`} class="category-link">
-                        {category}
+                    <a href={`/blog/category/${categories}`} class="category-link">
+                        {categories}
                     </a>
                 </li>
             ))}
@@ -107,6 +103,7 @@ const allCategories = [...new Set(allPosts.map(post => (post.data as any).catego
         font-size: 1.1rem;
         margin: 0.5rem 0;
         color: var(--text-color);
+        font-family: 'anonymous pro', sans-serif;
     }
 
     .writer-bio {
@@ -114,6 +111,13 @@ const allCategories = [...new Set(allPosts.map(post => (post.data as any).catego
         line-height: 1.5;
         margin-bottom: 1rem;
         color: var(--text-color);
+    }
+
+    .follow-me {
+        font-family: 'krok', sans-serif;
+        letter-spacing: 0.1em;
+        font-weight: 500;
+        
     }
 
     .social-links {
@@ -141,32 +145,40 @@ const allCategories = [...new Set(allPosts.map(post => (post.data as any).catego
         text-align: center;
     }
 
-    .bmc-button {
-        display: inline-flex;
-        align-items: center;
+    .bmc-container {
+        width: 100%;
+        display: flex;
         justify-content: center;
-        background-color: #FFDD00;
-        color: #000000;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        text-decoration: none;
-        font-weight: 600;
         margin-bottom: 1rem;
-        transition: background-color 0.3s ease;
+    }
+    /* BMCボタンのカスタマイズ */
+    :global(.bmc-button) {
+        width: auto !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 36px !important;
+        padding: 5px 10px !important;
+        font-size: 0.9rem !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
-    .bmc-button:hover {
-        background-color: #FFEA00;
+    /* ボタン内のテキスト配置修正 */
+    :global(.bmc-button span) {
+        margin: 0 auto !important;
+        text-align: center !important;
     }
 
-    .bmc-button i {
-        margin-right: 0.5rem;
+    /* ボタン内のアイコン調整 */
+    :global(.bmc-button img) {
+        margin-right: 5px !important;
     }
-
     .support-text {
         font-size: 0.9rem;
         line-height: 1.5;
         color: var(--text-color);
+        margin-top: 0.5rem;
     }
 
     /* Categories */

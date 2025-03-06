@@ -4,7 +4,7 @@ description: 'Astroでマークダウンを使ってブログ記事を書く方�
 pubDate: '2025-03-01'
 updatedDate: '2025-03-02'
 heroImage: '/src/assets/image-template.png'
-category: 'Markdown'
+categories: ['Astro', 'パフォーマンス最適化']
 ---
 
 # Astroでのマークダウン活用法

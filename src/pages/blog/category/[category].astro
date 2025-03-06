@@ -6,14 +6,15 @@ import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
     const posts = await getCollection('blog');
-    const categories = [...new Set(posts.map(post => post.data.category).filter(Boolean))];
+    // Extract all unique categories from all posts
+    const allCategories = [...new Set(posts.flatMap(post => post.data.categories || []))];
     
-    return categories.map(category => ({
+    return allCategories.map(category => ({
         params: { category },
         props: { 
             category,
             posts: posts
-                .filter(post => post.data.category === category)
+                .filter(post => post.data.categories && post.data.categories.includes(category))
                 .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
         },
     }));

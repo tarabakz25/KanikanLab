@@ -1,0 +1,244 @@
+p {
+    white-space: pre-line;
+    font-family: var(--font-japanese);
+    font-size: 20px;
+    line-height: 1.8;
+}
+h1 {
+    margin: 50px 0;
+    font-family: 'anonymous pro', sans-serif;
+}
+.page-container {
+    padding-left: 80px;
+    padding-right: 80px;
+    box-sizing: border-box;
+}
+.top-page {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.about-KanikanLab p {
+    text-align: center;
+}
+.top-page__message {
+    font-family: 'anonymous pro', sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 9.6px;
+    text-align: center;
+    color: var(--text-color);
+    position: relative;
+    min-height: 60px;
+}
+.follow-me-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 24px;
+    margin-bottom: 64px;
+}
+
+.follow-me-container a {
+    color: var(--text-color);
+    font-size: 32px;
+    transition: color 0.3s ease;
+}
+
+.follow-me-container a:hover {
+    color: #0077b5;
+}
+.top-page__message::after {
+    content: '|';
+    position: absolute;
+    right: -15px;
+    animation: blink 0.7s infinite;
+}
+.top-page__message.typing-done::after {
+    animation: blink 0.7s infinite;
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+.top-page__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-color);
+    text-decoration: none;
+    margin-top: 20px;
+}
+.top-page__logo Image {
+    width: 48px;
+    height: auto;
+}
+.top-page__logo span {
+    font-family: 'Krok', sans-serif;
+    font-size: 32px;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+}
+.top-page__message.cursor-hidden::after {
+    display: none; /* カーソルを完全に非表示 */
+}
+.introduction-writer {
+    width: 100%;
+}
+.introduction-writer h3 {
+    margin-top: 30px;
+    margin-bottom: 0 !important;
+    font-family: 'anonymous pro', sans-serif;
+    font-size: 32px;
+    text-align: center;
+}
+.writer-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.writer-container .writer-icon {
+    width: 150px;
+    height: auto;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 40px;
+}
+.explain-writer h2 {
+    font-family: 'anonymous pro', sans-serif;
+    font-size: 48px;
+    margin: 20px 0;
+}
+.explain-writer p {
+    font-family: var(--font-japanese);
+    font-size: 20px;
+    line-height: 1.8;
+}
+.timeline {
+    padding: 0 48px;
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* タイムラインの縦線 */
+.timeline::before {
+    content: '';
+    position: absolute;
+    width: 1px;
+    background-color: #000;
+    top: 0;
+    bottom: 0;
+    left: 30px;
+}
+.writer-skill {
+    margin-bottom: 30px;
+    display: flex;
+    height: 100px;
+    width: 500px auto;
+    align-items: center;
+    justify-content: center;
+}
+.writer-skill p {
+    font-family: 'anonymous pro', sans-serif;
+    position: relative;
+    padding-left: 20px;
+    padding-right: 10px;
+}
+.writer-skill p::before {
+    font-family: 'Font Awesome 6 Free';
+    content: '\f02b'; /* タグアイコンのコード */
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top:52%;
+    transform: translateY(-50%);
+    font-size: 16px;
+}
+.timeline-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    margin-bottom: 30px;
+    position: relative;
+    padding-left: 60px;
+}
+
+/* タイムラインの円 */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    border: 1px solid #000;
+    top: 5px;
+    left: 24px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.timeline-date {
+    font-family: 'anonymous pro', sans-serif;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.timeline-content {
+    transition: transform 0.6s ease;
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.timeline-item.visible .timeline-content {
+    transform: translateX(0);
+}
+.buy-me-a-coffee-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+}
+
+.coffee-message {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.coffee-button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: #FFDD00;
+    color: #000;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.coffee-button:hover {
+    background-color: #E5C700;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.coffee-button i {
+    margin-right: 8px;
+}
+
+.thank-you-message {
+    font-style: italic;
+    color: #666;
+    font-size: 0.9rem;
+}

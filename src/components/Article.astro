@@ -1,19 +1,26 @@
 ---
 import { type CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
+import { callSafely } from 'astro:actions';
 
 interface Props {
     post: CollectionEntry<'blog'>;
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, heroImage } = post.data;
+const { title, description, pubDate, heroImage, categories = [] } = post.data;
 ---
-
 <article class="article-card">
     <a href={`/blog/${post.slug}/`} class="article-link">
         {heroImage && (
             <div class="article-image">
+                {categories && categories.length > 0 && (
+                    <div class="article-tags">
+                        {categories.map((tag: string) => (
+                            <span class="tag">{tag}</span>
+                        ))}
+                    </div>
+                )}
                 <img src={import.meta.env.BASE_URL + heroImage.replace(/^\//, '')} alt={title} />
             </div>
         )}
@@ -23,11 +30,11 @@ const { title, description, pubDate, heroImage } = post.data;
                 <FormattedDate date={pubDate} />
             </p>
             <p class="article-description">{description}</p>
-            <span class="read-more">続きを読む &rarr;</span>
+
+            <span class="read-more">続きを読む →</span>
         </div>
     </a>
 </article>
-
 <style>
     .article-card {
         background-color: var(--color-bg-secondary);
@@ -53,6 +60,7 @@ const { title, description, pubDate, heroImage } = post.data;
         width: 100%;
         height: 200px;
         overflow: hidden;
+        position: relative;
     }
 
     .article-image img {
@@ -68,29 +76,55 @@ const { title, description, pubDate, heroImage } = post.data;
 
     .article-content {
         padding: 1.5rem;
+        text-align: left;
     }
 
     .article-title {
         margin: 0 0 0.5rem 0;
         font-size: 1.5rem;
         color: var(--color-text);
+        text-align: left;
     }
 
     .article-date {
         font-size: 0.9rem;
         color: var(--color-text-light);
         margin-bottom: 1rem;
+        text-align: left;
+        font-family: 'anonmous pro', monospace;
     }
 
     .article-description {
         margin-bottom: 1rem;
         color: var(--color-text);
         line-height: 1.5;
+        text-align: left;
     }
 
     .read-more {
         display: inline-block;
         color: var(--color-primary);
+        font-weight: 500;
+        text-align: left;
+    }
+    
+    .article-tags {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        pointer-events: none;
+    }
+
+    .tag {
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
         font-weight: 500;
     }
 
