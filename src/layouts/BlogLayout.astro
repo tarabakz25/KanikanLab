@@ -42,7 +42,7 @@ const { title, description, pubDate, updatedDate, heroImage, categories, heading
                             <div class="blog-categories">
                                 {categories.map((category) => (
                                     <a href={`/blog/category/${category}`} class="category-link">
-                                        {category}
+                                        <i class="fas fa-tag"></i> {category}
                                     </a>
                                 ))}
                             </div>
@@ -131,23 +131,34 @@ const { title, description, pubDate, updatedDate, heroImage, categories, heading
         justify-content: center;
         gap: 0.5rem;
     }
-
+    /* 記事内カテゴリリンクのスタイル修正 */
     .category-link {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
         background-color: var(--hover-bg);
         color: var(--text-color);
-        padding: 0.3rem 0.8rem;
-        border-radius: 4px;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
         text-decoration: none;
         font-size: 0.9rem;
-        transition: background-color 0.3s ease;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 0.2rem;
     }
 
     .category-link:hover {
-        background-color: var(--hover-bg);
-        opacity: 0.8;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        background-color: var(--accent-color, #4a6cf7);
+        color: white;
     }
 
+    .category-link i {
+        font-size: 0.8rem;
+        /* アイコンが表示されない問題を修正 */
+        display: inline-block;
+    }
     .blog-description {
         font-size: 1.1rem;
         color: var(--text-color);

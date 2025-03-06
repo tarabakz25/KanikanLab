@@ -17,7 +17,7 @@ const { title, description, pubDate, heroImage, categories = [] } = post.data;
                 {categories && categories.length > 0 && (
                     <div class="article-tags">
                         {categories.map((tag: string) => (
-                            <span class="tag">{tag}</span>
+                            <span class="tag"><i class="fas fa-tag"></i> {tag}</span>
                         ))}
                     </div>
                 )}
@@ -120,12 +120,26 @@ const { title, description, pubDate, heroImage, categories = [] } = post.data;
     }
 
     .tag {
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: var(--color-primary);
         color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 5px 10px;
+        border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .tag i {
+        font-size: 0.75rem;
+    }
+
+    .tag:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     }
 
     @media (max-width: 768px) {

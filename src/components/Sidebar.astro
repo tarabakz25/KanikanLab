@@ -49,7 +49,8 @@ const allCategories = [...new Set(allPosts.flatMap(post => post.data.categories 
             {allCategories.map(categories => (
                 <li>
                     <a href={`/blog/category/${categories}`} class="category-link">
-                        {categories}
+
+                        <i class="fas fa-tag"></i> {categories}
                     </a>
                 </li>
             ))}
