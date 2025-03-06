@@ -1,0 +1,32 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+import { Content as Disclaimer } from '../content/disclaimer.md';
+
+// メタデータ
+const title = '免責事項';
+const pubDate = new Date('2025-02-28');
+const description = "";
+
+// 見出しを手動で定義
+const headings = [
+  { depth: 2, slug: '1-情報の正確性について', text: '1. 情報の正確性について' },
+  { depth: 2, slug: '2-損害責任の制限', text: '2. 損害責任の制限' },
+  { depth: 2, slug: '3-著作権について', text: '3. 著作権について' },
+  { depth: 2, slug: '4-リンクポリシー', text: '4. リンクポリシー' },
+  { depth: 3, slug: '41-外部サイトへのリンク', text: '4.1 外部サイトへのリンク' },
+  { depth: 3, slug: '42-当サイトへのリンク', text: '4.2 当サイトへのリンク' },
+  { depth: 2, slug: '5-当サイトの利用条件', text: '5. 当サイトの利用条件' },
+  { depth: 2, slug: '6-サービス内容の変更', text: '6. サービス内容の変更' },
+  { depth: 2, slug: '7-準拠法と管轄裁判所', text: '7. 準拠法と管轄裁判所' },
+  { depth: 2, slug: '8-免責事項の変更について', text: '8. 免責事項の変更について' }
+];
+---
+
+<BlogLayout 
+  title={title}
+  description={description}
+  pubDate={pubDate}
+  headings={headings}
+>
+  <Disclaimer />
+</BlogLayout>

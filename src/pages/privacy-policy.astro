@@ -1,0 +1,37 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+import { Content as PrivacyPolicy } from '../content/privacy-policy.md';
+
+// メタデータ
+const title = 'プライバシーポリシー';
+const pubDate = new Date('2025-02-28');
+const description = "KanikanLabのプライバシーポリシーについてご説明します。個人情報の取り扱いや、当サイトのデータ収集方法についての詳細をご確認いただけます。";
+
+// 見出しを手動で定義
+const headings = [
+  { depth: 2, slug: '1-はじめに', text: '1. はじめに' },
+  { depth: 2, slug: '2-収集する個人情報について', text: '2. 収集する個人情報について' },
+  { depth: 3, slug: '21-収集する情報の種類', text: '2.1 収集する情報の種類' },
+  { depth: 3, slug: '22-個人情報以外の情報', text: '2.2 個人情報以外の情報' },
+  { depth: 2, slug: '3-個人情報の利用目的', text: '3. 個人情報の利用目的' },
+  { depth: 2, slug: '4-個人情報の第三者提供について', text: '4. 個人情報の第三者提供について' },
+  { depth: 2, slug: '5-個人情報の管理', text: '5. 個人情報の管理' },
+  { depth: 2, slug: '6-cookieおよび類似技術について', text: '6. Cookieおよび類似技術について' },
+  { depth: 2, slug: '7-googleアナリティクスの利用について', text: '7. Googleアナリティクスの利用について' },
+  { depth: 3, slug: '71-収集される情報', text: '7.1 収集される情報' },
+  { depth: 3, slug: '72-収集された情報の利用目的', text: '7.2 収集された情報の利用目的' },
+  { depth: 2, slug: '8-外部サイトへのリンク', text: '8. 外部サイトへのリンク' },
+  { depth: 3, slug: '81-リンク先サイトの責任', text: '8.1 リンク先サイトの責任' },
+  { depth: 3, slug: '82-リンク先の選定', text: '8.2 リンク先の選定' },
+  { depth: 2, slug: '9-プライバシーポリシーの変更について', text: '9. プライバシーポリシーの変更について' }
+];
+---
+
+<BlogLayout 
+  title={title}
+  description={description}
+  pubDate={pubDate}
+  headings={headings}
+>
+  <PrivacyPolicy />
+</BlogLayout>
