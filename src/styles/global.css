@@ -59,3 +59,31 @@ pre::after {
 pre:hover::after {
   opacity: 1;
 }
+
+/* グローバルカテゴリーリンクスタイル */
+.category-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--hover-bg);
+    color: var(--text-color);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0.2rem;
+}
+
+.category-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    background-color: var(--accent-color, #4a6cf7);
+    color: white;
+}
+
+.category-link i {
+    font-size: 0.8rem;
+    display: inline-block;
+}

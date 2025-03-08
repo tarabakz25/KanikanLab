@@ -3,6 +3,7 @@ import MainLayout from './MainLayout.astro';
 import Sidebar from '../components/Sidebar.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 import '../styles/global.css';
 
@@ -22,6 +23,7 @@ const { title, description, pubDate, updatedDate, heroImage, categories, heading
     <div class="blog-container">
         <div class="blog-main">
             <article class="blog-post">
+                <Breadcrumbs title={title} categories={categories} />
                 <div class="blog-header">
                     {heroImage && (
                         <div class="hero-image">
@@ -32,11 +34,6 @@ const { title, description, pubDate, updatedDate, heroImage, categories, heading
                         <h1 class="blog-title">{title}</h1>
                         <div class="blog-date">
                             <span>公開日: <FormattedDate date={pubDate} /></span>
-                            {updatedDate && (
-                                <span class="updated-date">
-                                    更新日: <FormattedDate date={updatedDate} />
-                                </span>
-                            )}
                         </div>
                         {categories && categories.length > 0 && (
                             <div class="blog-categories">
@@ -130,34 +127,6 @@ const { title, description, pubDate, updatedDate, heroImage, categories, heading
         flex-wrap: wrap;
         justify-content: center;
         gap: 0.5rem;
-    }
-    /* 記事内カテゴリリンクのスタイル修正 */
-    .category-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background-color: var(--hover-bg);
-        color: var(--text-color);
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin: 0.2rem;
-    }
-
-    .category-link:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        background-color: var(--accent-color, #4a6cf7);
-        color: white;
-    }
-
-    .category-link i {
-        font-size: 0.8rem;
-        /* アイコンが表示されない問題を修正 */
-        display: inline-block;
     }
     .blog-description {
         font-size: 1.1rem;
