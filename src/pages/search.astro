@@ -1,0 +1,278 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Article from '../components/Article.astro';
+import Sidebar from '../components/Sidebar.astro';
+import SearchBox from '../components/SearchBox.astro';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE } from '../consts';
+
+import '../styles/blog.css';
+
+// Get the search query from the URL (for initializing the search box)
+const query = Astro.url.searchParams.get('q') || '';
+
+// Get all blog posts
+const allPosts = await getCollection('blog');
+
+// Get the BASE_URL for image paths
+const BASE_URL = import.meta.env.BASE_URL || '';
+
+// Convert posts to a format that can be used in client-side JavaScript
+const serializedPosts = allPosts.map(post => ({
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description || '',
+  pubDate: post.data.pubDate.toISOString(),
+  heroImage: post.data.heroImage || '',
+  categories: post.data.categories || [],
+  content: post.body
+}));
+---
+
+<MainLayout>
+    <div class="blog-container">
+        <div class="blog-content">
+            <div class="blog-header">
+                <h1>検索結果</h1>
+                <div class="search-container">
+                    <SearchBox initialValue={query} />
+                </div>
+                <div id="search-info">
+                    <p>検索中...</p>
+                </div>
+            </div>
+
+            <div id="search-results" class="blog-grid">
+                <!-- Search results will be inserted here by JavaScript -->
+            </div>
+
+            <div id="no-results" class="no-posts" style="display: none;">
+                <p id="no-results-message"></p>
+                <p>別のキーワードで検索してみてください。</p>
+            </div>
+            
+            <div class="back-link">
+                <a href="/blog">ブログトップに戻る</a>
+            </div>
+        </div>
+        
+        <div class="blog-sidebar">
+            <Sidebar />
+        </div>
+    </div>
+</MainLayout>
+
+<script define:vars={{ serializedPosts, BASE_URL }}>
+// Client-side search implementation
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInfo = document.getElementById('search-info');
+    const searchResults = document.getElementById('search-results');
+    const noResults = document.getElementById('no-results');
+    const noResultsMessage = document.getElementById('no-results-message');
+    
+    // Get the query parameter directly from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q') || '';
+    
+    // If no query, show message
+    if (!query) {
+        searchInfo.innerHTML = '<p>検索キーワードを入力してください</p>';
+        return;
+    }
+    
+    // Filter posts based on the search query
+    const filteredPosts = serializedPosts.filter(post => {
+        const title = post.title.toLowerCase();
+        const description = post.description.toLowerCase();
+        const content = post.content.toLowerCase();
+        const searchQuery = query.toLowerCase();
+        
+        return title.includes(searchQuery) || 
+               description.includes(searchQuery) || 
+               content.includes(searchQuery);
+    });
+    
+    // Sort filtered posts by publication date (newest first)
+    const sortedPosts = filteredPosts.sort((a, b) => 
+        new Date(b.pubDate).valueOf() - new Date(a.pubDate).valueOf()
+    );
+    
+    // Update search info
+    searchInfo.innerHTML = `<p>「${query}」の検索結果: ${sortedPosts.length}件</p>`;
+    
+    // If no results, show message
+    if (sortedPosts.length === 0) {
+        noResultsMessage.textContent = `「${query}」に一致する記事が見つかりませんでした。`;
+        noResults.style.display = 'block';
+        return;
+    }
+    
+    // Render search results
+    searchResults.innerHTML = sortedPosts.map(post => `
+        <article class="article-card">
+            <a href="/blog/${post.slug}/" class="article-link">
+                ${post.heroImage ? `
+                    <div class="article-image">
+                        ${post.categories && post.categories.length > 0 ? `
+                            <div class="article-tags">
+                                ${post.categories.map(tag => `
+                                    <span class="tag"><i class="fas fa-tag"></i> ${tag}</span>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        <img src="${BASE_URL + post.heroImage.replace(/^\//, '')}" alt="${post.title}" />
+                    </div>
+                ` : ''}
+                <div class="article-content">
+                    <h2 class="article-title">${post.title}</h2>
+                    <p class="article-date">${new Date(post.pubDate).toLocaleDateString('ja-JP')}</p>
+                    <p class="article-description">${post.description}</p>
+                    <span class="read-more">続きを読む →</span>
+                </div>
+            </a>
+        </article>
+    `).join('');
+});
+</script>
+
+<style>
+    .search-container {
+        margin: 20px 0;
+    }
+    .back-link {
+        margin-top: 30px;
+    }
+    .back-link a {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s;
+    }
+    .back-link a:hover {
+        background-color: #e0e0e0;
+    }
+
+    /* Article card styles */
+    .article-card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 2rem;
+    }
+
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .article-link {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .article-image {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .article-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .article-card:hover .article-image img {
+        transform: scale(1.05);
+    }
+
+    .article-content {
+        padding: 1.5rem;
+        text-align: left;
+    }
+
+    .article-title {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.5rem;
+        color: #000000;
+        text-align: left;
+    }
+
+    .article-date {
+        font-size: 0.9rem;
+        color: #666666;
+        margin-bottom: 1rem;
+        text-align: left;
+        font-family: 'anonmous pro', monospace;
+    }
+
+    .article-description {
+        margin-bottom: 1rem;
+        color: #000000;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    .read-more {
+        display: inline-block;
+        color: #4a6cf7;
+        font-weight: 500;
+        text-align: left;
+    }
+    
+    .article-tags {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        pointer-events: none;
+    }
+
+    .tag {
+        background-color: #4a6cf7;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .tag i {
+        font-size: 0.75rem;
+    }
+
+    .tag:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .article-image {
+            height: 150px;
+        }
+
+        .article-title {
+            font-size: 1.2rem;
+        }
+
+        .article-content {
+            padding: 1rem;
+        }
+    }
+</style>

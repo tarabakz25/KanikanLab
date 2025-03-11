@@ -21,15 +21,8 @@ const frameworks = ['Astro', 'Flask', 'SwiftUI', 'SDL', 'Siv3D']
                 <span>KanikanLab</span>
             </div>
         </div>
-        <div class="about-KanikanLab">
-            <h1>About KanikanLab</h1>
-            <p>KanikanLabは、エンターテインメントとテクノロジーをテーマにしたブログサイトです。
-                テクノロジー、プログラミング、便利ツールや趣味の話をメインに発信していきます。
-                ごゆっくりご覧ください！
-            </p>
-        </div>
-        <div class="introduction-writer">
-            <h1>Profile</h1>
+        <div class="introduction-writer container">
+            <h1 class="heading-with-line">Profile</h1>
             <div class="writer-container">
                 <Image src={WriterIcon} alt="WriterIcon" class="writer-icon" />
                 <div class="explain-writer">
@@ -52,8 +45,8 @@ const frameworks = ['Astro', 'Flask', 'SwiftUI', 'SDL', 'Siv3D']
                     </a>
                 </div>
             </div>
-            <div class="my-tools">
-                <h1>My Items</h1>
+            <div class="my-tools container">
+                <h1 class="heading-with-line">My Items</h1>
                 <h3>Gears</h3>
                 <div class="writer-skill">
                     {gears.map(gear => <p>{gear}</p>)}
@@ -69,7 +62,7 @@ const frameworks = ['Astro', 'Flask', 'SwiftUI', 'SDL', 'Siv3D']
             </div>
         </div>
         <div class="history">
-            <h1>History</h1>
+            <h1 class="heading-with-line">History</h1>
             <div class="timeline">
                 <div class="timeline-item hidden">
                     <div class="timeline-date">Apr 2O23</div>
@@ -103,18 +96,10 @@ const frameworks = ['Astro', 'Flask', 'SwiftUI', 'SDL', 'Siv3D']
                 </div>
             </div>
         </div>
-        <div class="finally">
-            <h1>Finally</h1>
-            <div class="buy-me-a-coffee-container">
-                <p class="coffee-message">このブログが気に入っていただけたら、是非コーヒー一杯分のサポートをお願いします！
-                    皆様のサポートで、KanikanLabのより良いコンテンツ作りが継続できます。
-                    ここで得られた資金は、インフラ費用、生成AIのAPI費用などに使わせていただきます。
-                </p>
-                <a href="https://www.buymeacoffee.com/aikikizukiz"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=🏕️&slug=aikikizukiz&button_colour=FFDD00&font_colour=000000&font_family=Bree&outline_colour=000000&coffee_colour=ffffff" /></a>
-                <p class="thank-you-message">サポートしてくださる方々へ心より感謝申し上げます。</p>
-            </div>
+        <div class="contact">
+            <h1 class="heading-with-line">Contact</h1>
+            <p class="contact-email">aikikizuki@gmail.com</p>
         </div>
-    </div>
 </MainLayout>
 
 <script>

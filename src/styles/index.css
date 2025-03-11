@@ -46,14 +46,14 @@
 }
 .article-page {
     margin: 0 auto;
-    padding: 0 80px;
+    padding: 0 140px;
     box-sizing: border-box;
     width: 100%;
     text-align: center;
     display: flex;
 
 }
-.article-page .article-container .search-box {
+.search-box {
     margin: 80px auto 60px;
     max-width: 600px; /* 必要に応じて調整 */
     display: inline-block;
@@ -83,6 +83,7 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
     margin-bottom: 2rem;
+    align-items: flex-start;
 }
 
 .no-posts {

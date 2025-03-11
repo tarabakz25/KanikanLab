@@ -4,6 +4,8 @@
     --bg-color: #ffffff;
     --text-color: #000000;
     --hover-bg: rgba(0, 0, 0, 0.05);
+    --accent-color: #4a6cf7;
+    --accent-dark: #3a5bd0;
     /* その他必要な変数 */
     --font-japanese: "Apple SD Gothic Neo", sans-serif;
     --font-english: "Anonymous Pro", sans-serif;

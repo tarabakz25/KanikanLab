@@ -4,23 +4,37 @@ import Article from '../../../components/Article.astro';
 import Sidebar from '../../../components/Sidebar.astro';
 import { getCollection } from 'astro:content';
 
-export async function getStaticPaths() {
+import '../../../styles/blog.css';
+
+export async function getStaticPaths({ paginate }) {
     const posts = await getCollection('blog');
     // Extract all unique categories from all posts
     const allCategories = [...new Set(posts.flatMap(post => post.data.categories || []))];
     
-    return allCategories.map(category => ({
-        params: { category },
-        props: { 
-            category,
-            posts: posts
-                .filter(post => post.data.categories && post.data.categories.includes(category))
-                .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-        },
-    }));
+    return allCategories.map(category => {
+        const filteredPosts = posts
+            .filter(post => post.data.categories && post.data.categories.includes(category))
+            .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+        
+        return {
+            params: { page: category },
+            props: { 
+                category,
+                page: {
+                    data: filteredPosts,
+                    total: filteredPosts.length,
+                    url: {
+                        prev: undefined,
+                        next: undefined
+                    }
+                }
+            }
+        };
+    });
 }
 
-const { category, posts } = Astro.props;
+const { category, page } = Astro.props;
+const totalPosts = page.total;
 ---
 
 <MainLayout>
@@ -28,13 +42,18 @@ const { category, posts } = Astro.props;
         <div class="blog-content">
             <div class="category-header">
                 <h1>カテゴリー: {category}</h1>
-                <p>{posts.length} 件の記事</p>
+                <p>{totalPosts} 件の記事</p>
             </div>
 
             <div class="blog-grid">
-                {posts.map((post) => (
+                {page.data.map((post) => (
                     <Article post={post} />
                 ))}
+            </div>
+
+            <div class="pagination">
+                {page.url.prev && <a href={page.url.prev}>前のページ</a>}
+                {page.url.next && <a href={page.url.next}>次のページ</a>}
             </div>
 
             <div class="back-link-container">

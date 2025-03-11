@@ -1,16 +1,45 @@
 ---
 import { Image } from 'astro:assets';
+
+interface Props {
+    initialValue?: string;
+}
+
+const { initialValue = '' } = Astro.props;
 ---
 
-<div class="search-box__container">
+<form action="/search" method="get" class="search-box__container">
     <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" placeholder="検索" />
-</div>
+    <input type="text" name="q" placeholder="検索" value={initialValue} />
+    <button type="submit" aria-label="検索">
+        <i class="fa-solid fa-arrow-right"></i>
+    </button>
+</form>
+
+<script>
+    // Add event listener to the form
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('.search-box__container');
+        if (form) {
+            const input = form.querySelector('input[name="q"]') as HTMLInputElement;
+            if (input) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const query = input.value.trim();
+                    if (query) {
+                        window.location.href = `/search?q=${encodeURIComponent(query)}`;
+                    }
+                });
+            }
+        }
+    });
+</script>
 
 <style>
     .search-box__container {
         position: relative;
         width: 300px;
+        display: flex;
     }
     .search-box__container input[type="text"] {
         width: 100%;
@@ -26,11 +55,28 @@ import { Image } from 'astro:assets';
         border-color: #888;
     }
 
-    .search-box__container i {
+    .search-box__container i.fa-magnifying-glass {
         position: absolute;
         left: 15px;
         top: 50%;
         transform: translateY(-50%);
         color: #888;
+    }
+
+    .search-box__container button {
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        color: #888;
+        transition: color 0.3s;
+    }
+
+    .search-box__container button:hover {
+        color: #333;
     }
 </style>

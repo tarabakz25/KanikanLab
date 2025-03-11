@@ -2,6 +2,7 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Article from '../../components/Article.astro';
 import Sidebar from '../../components/Sidebar.astro';
+import SearchBox from '../../components/SearchBox.astro';
 import { getCollection } from 'astro:content';
 import { SITE_TITLE } from '../../consts';
 
@@ -10,28 +11,41 @@ import '../../styles/blog.css';
 // Get all blog posts sorted by publication date (newest first)
 const posts = await getCollection('blog');
 const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Get only the first 6 posts for the first page
+const pageSize = 6;
+const firstPagePosts = sortedPosts.slice(0, pageSize);
+const hasMorePages = sortedPosts.length > pageSize;
+const nextPage = hasMorePages ? '/blog/page/2' : undefined;
 ---
 
 <MainLayout>
     <div class="blog-container">
         <div class="blog-content">
             <div class="blog-header">
-                <h1>{SITE_TITLE} ブログ</h1>
-                <p>最新の記事や情報をお届けします</p>
+                <h1>{SITE_TITLE} 情報格納庫</h1>
+                <p>最新の情報を共有中... ゆっくりみていってください。</p>
+                <div class="search-container">
+                    <SearchBox />
+                </div>
             </div>
 
             <div class="blog-grid">
-                {sortedPosts.map((post) => (
+                {firstPagePosts.map((post) => (
                     <Article post={post} />
                 ))}
             </div>
 
-            {sortedPosts.length === 0 && (
+            {firstPagePosts.length === 0 && (
                 <div class="no-posts">
                     <p>まだ記事がありません。</p>
                     <p>もうしばらくお待ちください。</p>
                 </div>
             )}
+
+            <div class="pagination">
+                {hasMorePages && <a href="/blog/page/2">次のページ</a>}
+            </div>
         </div>
         
         <div class="blog-sidebar">
