@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 
 import '../../../styles/blog.css';
 
-export async function getStaticPaths({ paginate }) {
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
     const posts = await getCollection('blog');
     // Extract all unique categories from all posts
     const allCategories = [...new Set(posts.flatMap(post => post.data.categories || []))];
@@ -52,8 +52,22 @@ const totalPosts = page.total;
             </div>
 
             <div class="pagination">
-                {page.url.prev && <a href={page.url.prev}>前のページ</a>}
-                {page.url.next && <a href={page.url.next}>次のページ</a>}
+                <div class="pagination-info">
+                    <span>ページ 1 / 1</span>
+                </div>
+                <div class="pagination-controls">
+                    {page.url.prev ? (
+                        <a href={page.url.prev} class="pagination-prev">前のページ</a>
+                    ) : (
+                        <span class="pagination-prev disabled">前のページ</span>
+                    )}
+                    
+                    {page.url.next ? (
+                        <a href={page.url.next} class="pagination-next">次のページ</a>
+                    ) : (
+                        <span class="pagination-next disabled">次のページ</span>
+                    )}
+                </div>
             </div>
 
             <div class="back-link-container">

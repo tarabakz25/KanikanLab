@@ -10,6 +10,7 @@ import '../../styles/blog.css';
 
 // Get all blog posts sorted by publication date (newest first)
 const posts = await getCollection('blog');
+console.log("All posts:", posts.map(p => p.slug));
 const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 // Get only the first 6 posts for the first page
@@ -17,6 +18,14 @@ const pageSize = 6;
 const firstPagePosts = sortedPosts.slice(0, pageSize);
 const hasMorePages = sortedPosts.length > pageSize;
 const nextPage = hasMorePages ? '/blog/page/2' : undefined;
+const totalPages = Math.ceil(sortedPosts.length / pageSize);
+const currentPage = 1;
+
+// Debug information
+console.log(`Total posts: ${sortedPosts.length}`);
+console.log(`Has more pages: ${hasMorePages}`);
+console.log(`Next page: ${nextPage}`);
+console.log(`Total pages: ${totalPages}`);
 ---
 
 <MainLayout>
@@ -44,7 +53,22 @@ const nextPage = hasMorePages ? '/blog/page/2' : undefined;
             )}
 
             <div class="pagination">
-                {hasMorePages && <a href="/blog/page/2">次のページ</a>}
+                <div class="pagination-info">
+                    <span>ページ {currentPage} / {totalPages}</span>
+                </div>
+                <div class="pagination-controls">
+                    {currentPage > 1 ? (
+                        <a href={`/blog/page/${currentPage - 1}`} class="pagination-prev">前のページ</a>
+                    ) : (
+                        <span class="pagination-prev disabled">前のページ</span>
+                    )}
+                    
+                    {hasMorePages ? (
+                        <a href={`/blog/page/${currentPage + 1}`} class="pagination-next">次のページ</a>
+                    ) : (
+                        <span class="pagination-next disabled">次のページ</span>
+                    )}
+                </div>
             </div>
         </div>
         
