@@ -2,6 +2,7 @@
 import { type CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import { callSafely } from 'astro:actions';
+import { Image } from 'astro:assets';
 
 interface Props {
     post: CollectionEntry<'blog'>;
@@ -21,7 +22,7 @@ const { title, description, pubDate, heroImage, categories = [] } = post.data;
                         ))}
                     </div>
                 )}
-                <img src={import.meta.env.BASE_URL + heroImage.replace(/^\//, '')} alt={title} />
+                <Image src={heroImage} alt={title} width={800} height={400} />
             </div>
         )}
         <div class="article-content">

@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import  WriterLogo  from '../assets/placeholder-hero.png';
 
 
@@ -12,7 +13,7 @@ const allCategories = [...new Set(allPosts.flatMap(post => post.data.categories 
 <div class="sidebar">
     <div class="sidebar-section writer-profile">
         <div class="writer-content">
-            <img src={WriterLogo.src} alt="Writer" class="writer-image" />
+            <Image src={WriterLogo} alt="Writer" class="writer-image" />
             <h4 class="writer-name">Kizuki</h4>
             <p class="writer-bio">
                 神山まるごと高専一期生。 東京→徳島
