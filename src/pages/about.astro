@@ -100,6 +100,7 @@ const frameworks = ['Astro', 'Flask', 'SwiftUI', 'SDL', 'Siv3D']
             <h1 class="heading-with-line">Contact</h1>
             <p class="contact-email">aikikizuki@gmail.com</p>
         </div>
+    </div>
 </MainLayout>
 
 <script>
@@ -110,6 +111,8 @@ const frameworks = ['Astro', 'Flask', 'SwiftUI', 'SDL', 'Siv3D']
     let currentText = '';
     
     function type() {
+        if (!typingElement) return;
+        
         if (i < text.length) {
             currentText += text.charAt(i);
             typingElement.textContent = currentText;
@@ -118,7 +121,9 @@ const frameworks = ['Astro', 'Flask', 'SwiftUI', 'SDL', 'Siv3D']
         } else {
             // タイピングが終わったらカーソルを点滅させるだけに
             setTimeout(() => {
-                typingElement.classList.add('cursor-hidden');
+                if (typingElement) {
+                    typingElement.classList.add('cursor-hidden');
+                }
             }, 0);
         }
     }
