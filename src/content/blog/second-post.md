@@ -3,7 +3,7 @@ title: 'Astroでのマークダウン活用法'
 description: 'Astroでマークダウンを使ってブログ記事を書く方法と便利な機能について解説します。'
 pubDate: '2025-03-01'
 updatedDate: '2025-03-02'
-heroImage: '../assets/image-template.png'
+heroImage: '/image-template.png'
 categories: ['Astro', 'パフォーマンス最適化']
 ---
 
