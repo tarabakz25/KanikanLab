@@ -5,12 +5,18 @@ import { getAllPosts } from '../lib/cosmic';
 
 // Get all posts and extract categories
 const posts = await getAllPosts();
+console.log('Posts categories:', posts.map(post => post.metadata?.categories));
 // Extract all unique categories from all posts
 const allCategories = [...new Set(
-    posts.flatMap(post => 
-        post.metadata?.categories?.map(c => c.category) || []
-    )
+    posts.flatMap(post => {
+        const categories = post.metadata?.categories || [];
+        return categories.map(cat => 
+            typeof cat === 'object' && cat.category ? cat.category : cat
+        );
+    })
 )];
+
+console.log('Sidebar categories:', allCategories);
 ---
 
 <div class="sidebar">

@@ -59,23 +59,26 @@ export async function getPostBySlug(slug: string) {
 }
 
 // Get posts by category
-export async function getPostsByCategory(category: string, limit: number = 10, skip: number = 0) {
+export async function getPostsByCategory(categoryName: string, limit: number = 10, skip: number = 0) {
   try {
-    console.log(`Fetching posts with category: ${category}`);
-    const data = await cosmic.objects
-      .find({
-        type: CONTENT_TYPE,
-        'metadata.categories': category
-      })
-      .props('title,slug,metadata,created_at')
-      .depth(1)
-      .limit(limit)
-      .skip(skip)
+    console.log(`Fetching posts with category: ${categoryName}`);
     
-    console.log(`Found ${data.objects.length} posts in category ${category}`);
-    return data.objects || [];
+    // まず全ての記事を取得
+    const allPosts = await getAllPosts();
+    
+    // カテゴリーでフィルタリング（クライアント側で処理）
+    const filteredPosts = allPosts.filter(post => {
+      const categories = post.metadata?.categories || [];
+      return categories.some(cat => 
+        (typeof cat === 'object' && cat.category === categoryName) || 
+        cat === categoryName
+      );
+    });
+    
+    console.log(`Found ${filteredPosts.length} posts in category ${categoryName}`);
+    return filteredPosts;
   } catch (error) {
-    logError(error, `getPostsByCategory(${category})`);
+    logError(error, `getPostsByCategory(${categoryName})`);
     return [];
   }
 }
