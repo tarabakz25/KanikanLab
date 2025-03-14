@@ -6,8 +6,8 @@ const CONTENT_TYPE = 'posts';
 
 // Create the Cosmic client
 const cosmic = createBucketClient({
-  bucketSlug: import.meta.env.PUBLIC_COSMIC_BUCKET_SLUG,
-  readKey: import.meta.env.PUBLIC_COSMIC_READ_KEY
+  bucketSlug: import.meta.env.COSMIC_BUCKET_SLUG,
+  readKey: import.meta.env.COSMIC_READ_KEY
 })
 
 // Helper function to log errors
