@@ -3,11 +3,13 @@ import { createBucketClient } from '@cosmicjs/sdk'
 // Content type for blog posts in Cosmic CMS
 // This might need to be adjusted based on your Cosmic CMS setup
 const CONTENT_TYPE = 'posts';
+const COSMIC_BUCKET_SLUG="my-project-production-671831c0-0083-11f0-8cb2-45ee86b76b4d"
+const COSMIC_READ_KEY="o7WitYWb91SDZOMJV7q0Eov6Qu1i7w4GRRDlCQQUH39A3bPAzY"
 
 // Create the Cosmic client
 const cosmic = createBucketClient({
-  bucketSlug: import.meta.env.COSMIC_BUCKET_SLUG,
-  readKey: import.meta.env.COSMIC_READ_KEY
+  bucketSlug: COSMIC_BUCKET_SLUG,
+  readKey: COSMIC_READ_KEY
 })
 
 // Helper function to log errors
