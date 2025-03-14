@@ -3,29 +3,27 @@ import MainLayout from '../../layouts/MainLayout.astro';
 import Article from '../../components/Article.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import SearchBox from '../../components/SearchBox.astro';
-import { getCollection } from 'astro:content';
+import { getPaginatedPosts } from '../../lib/cosmic';
 import { SITE_TITLE } from '../../consts';
 
 import '../../styles/blog.css';
 
-// Get all blog posts sorted by publication date (newest first)
-const posts = await getCollection('blog');
-console.log("All posts:", posts.map(p => p.slug));
-const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-// Get only the first 6 posts for the first page
+// Get posts from Cosmic CMS with pagination
 const pageSize = 6;
-const firstPagePosts = sortedPosts.slice(0, pageSize);
-const hasMorePages = sortedPosts.length > pageSize;
+const { posts, total } = await getPaginatedPosts(pageSize, 0);
+
+// Calculate pagination info
+const hasMorePages = total > pageSize;
 const nextPage = hasMorePages ? '/blog/page/2' : undefined;
-const totalPages = Math.ceil(sortedPosts.length / pageSize);
+const totalPages = Math.max(1, Math.ceil(total / pageSize));
 const currentPage = 1;
 
 // Debug information
-console.log(`Total posts: ${sortedPosts.length}`);
-console.log(`Has more pages: ${hasMorePages}`);
-console.log(`Next page: ${nextPage}`);
-console.log(`Total pages: ${totalPages}`);
+console.log(`Blog index: Total posts: ${total}`);
+console.log(`Blog index: Posts array:`, posts);
+console.log(`Blog index: Has more pages: ${hasMorePages}`);
+console.log(`Blog index: Next page: ${nextPage}`);
+console.log(`Blog index: Total pages: ${totalPages}`);
 ---
 
 <MainLayout>
@@ -40,12 +38,12 @@ console.log(`Total pages: ${totalPages}`);
             </div>
 
             <div class="blog-grid">
-                {firstPagePosts.map((post) => (
+                {posts.map((post) => (
                     <Article post={post} />
                 ))}
             </div>
 
-            {firstPagePosts.length === 0 && (
+            {posts.length === 0 && (
                 <div class="no-posts">
                     <p>まだ記事がありません。</p>
                     <p>もうしばらくお待ちください。</p>

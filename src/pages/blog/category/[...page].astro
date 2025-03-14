@@ -2,39 +2,33 @@
 import MainLayout from '../../../layouts/MainLayout.astro';
 import Article from '../../../components/Article.astro';
 import Sidebar from '../../../components/Sidebar.astro';
-import { getCollection } from 'astro:content';
+import { getAllPosts, getPostsByCategory } from '../../../lib/cosmic';
 
 import '../../../styles/blog.css';
 
-export async function getStaticPaths({ paginate }: { paginate: Function }) {
-    const posts = await getCollection('blog');
+export async function getStaticPaths() {
+    const allPosts = await getAllPosts();
+    
     // Extract all unique categories from all posts
-    const allCategories = [...new Set(posts.flatMap(post => post.data.categories || []))];
+    const allCategories = [...new Set(allPosts.flatMap(post => post.metadata?.categories || []))];
     
     return allCategories.map(category => {
-        const filteredPosts = posts
-            .filter(post => post.data.categories && post.data.categories.includes(category))
-            .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-        
         return {
             params: { page: category },
-            props: { 
-                category,
-                page: {
-                    data: filteredPosts,
-                    total: filteredPosts.length,
-                    url: {
-                        prev: undefined,
-                        next: undefined
-                    }
-                }
-            }
+            props: { category }
         };
     });
 }
 
-const { category, page } = Astro.props;
-const totalPosts = page.total;
+interface Props {
+    category: string;
+}
+
+const { category } = Astro.props;
+
+// Get posts for this category
+const posts = await getPostsByCategory(category);
+const totalPosts = posts.length;
 ---
 
 <MainLayout>
@@ -46,7 +40,7 @@ const totalPosts = page.total;
             </div>
 
             <div class="blog-grid">
-                {page.data.map((post) => (
+                {posts.map((post) => (
                     <Article post={post} />
                 ))}
             </div>
@@ -56,17 +50,8 @@ const totalPosts = page.total;
                     <span>ページ 1 / 1</span>
                 </div>
                 <div class="pagination-controls">
-                    {page.url.prev ? (
-                        <a href={page.url.prev} class="pagination-prev">前のページ</a>
-                    ) : (
-                        <span class="pagination-prev disabled">前のページ</span>
-                    )}
-                    
-                    {page.url.next ? (
-                        <a href={page.url.next} class="pagination-next">次のページ</a>
-                    ) : (
-                        <span class="pagination-next disabled">次のページ</span>
-                    )}
+                    <span class="pagination-prev disabled">前のページ</span>
+                    <span class="pagination-next disabled">次のページ</span>
                 </div>
             </div>
 

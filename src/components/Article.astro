@@ -1,15 +1,17 @@
 ---
-import { type CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
-import { callSafely } from 'astro:actions';
 import { Image } from 'astro:assets';
 
 interface Props {
-    post: CollectionEntry<'blog'>;
+    post: any; // Cosmic CMS post object
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, heroImage, categories = [] } = post.data;
+const title = post.title;
+const description = post.metadata?.description || '';
+const pubDate = post.metadata?.pubDate || post.created_at;
+const heroImage = post.metadata?.hero?.imgix_url || post.metadata?.heroImage;
+const categories = post.metadata?.categories || [];
 ---
 <article class="article-card">
     <a href={`/blog/${post.slug}/`} class="article-link">

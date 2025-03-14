@@ -1,24 +1,110 @@
 ---
-import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 import BlogLayout from '../../layouts/BlogLayout.astro';
+import { getAllPosts, getPostBySlug } from '../../lib/cosmic';
+import { marked } from 'marked';
+import MainLayout from '../../layouts/MainLayout.astro';
 
 export async function getStaticPaths() {
-    const posts = await getCollection('blog');
+    const posts = await getAllPosts();
     return posts.map((post) => ({
         params: { slug: post.slug },
-        props: { post },
+        props: { slug: post.slug },
     }));
 }
 
 interface Props {
-    post: CollectionEntry<'blog'>;
+    slug: string;
 }
 
-const { post } = Astro.props;
-const { Content, headings } = await post.render();
+const { slug } = Astro.props;
+const post = await getPostBySlug(slug);
+
+// If post not found, show error page
+if (!post) {
+    console.error(`Post not found: ${slug}`);
+}
+
+// Extract headings from content for table of contents
+const extractHeadings = (content: string) => {
+    const headings: { depth: number; slug: string; text: string }[] = [];
+    
+    // Simple regex to extract headings
+    const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+    let match;
+    
+    while ((match = headingRegex.exec(content)) !== null) {
+        const level = match[1].length;
+        const text = match[2].trim();
+        const slug = text.toLowerCase().replace(/[^\w]+/g, '-');
+        
+        headings.push({
+            depth: level,
+            slug,
+            text
+        });
+    }
+    
+    return headings;
+};
+
+// Only process content if post exists
+let headings: { depth: number; slug: string; text: string }[] = [];
+let htmlContent = '';
+let layoutProps: any = {
+    title: '記事が見つかりません',
+    description: 'お探しの記事は見つかりませんでした。',
+    pubDate: new Date(),
+    categories: []
+};
+
+if (post) {
+    headings = extractHeadings(post.content || '');
+    // Use marked.parse instead of marked for synchronous parsing
+    htmlContent = marked.parse(post.content || '') as string;
+
+    // Map Cosmic data to BlogLayout props
+    layoutProps = {
+        title: post.title,
+        description: post.metadata?.description || '',
+        pubDate: new Date(post.metadata?.pubDate || post.created_at),
+        updatedDate: post.metadata?.updatedDate ? new Date(post.metadata.updatedDate) : undefined,
+        heroImage: post.metadata?.hero?.imgix_url || post.metadata?.heroImage,
+        categories: post.metadata?.categories || [],
+        headings
+    };
+}
 ---
 
-<BlogLayout {...post.data} headings={headings}>
-    <Content />
-</BlogLayout>
+{post ? (
+    <BlogLayout {...layoutProps}>
+        <div set:html={htmlContent} />
+    </BlogLayout>
+) : (
+    <MainLayout>
+        <div class="error-container">
+            <h1>記事が見つかりません</h1>
+            <p>お探しの記事は見つかりませんでした。</p>
+            <a href="/blog" class="back-link">← ブログ一覧に戻る</a>
+        </div>
+    </MainLayout>
+)}
+
+<style>
+    .error-container {
+        max-width: 800px;
+        margin: 5rem auto;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .back-link {
+        display: inline-block;
+        margin-top: 2rem;
+        color: var(--color-primary);
+        text-decoration: none;
+    }
+    
+    .back-link:hover {
+        text-decoration: underline;
+    }
+</style>

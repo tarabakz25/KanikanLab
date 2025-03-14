@@ -11,11 +11,9 @@ import { getCollection } from 'astro:content';
 
 import '../styles/index.css';
 
-// Get the 3 most recent blog posts
-const allPosts = await getCollection('blog');
-const recentPosts = allPosts
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-    .slice(0, 3);
+import { getAllPosts } from '../lib/cosmic'
+
+const data = await getAllPosts()
 ---
 
 <MainLayout>
@@ -34,12 +32,20 @@ const recentPosts = allPosts
 			<div class="search-box"><SearchBox /></div>
 			<h2 class="section-title">最新の記事</h2>
 			<section class="recent-posts">
-				{recentPosts.map((post) => (
-					<Article post={post} />
+				{data.map((post: any) => (
+					<Article
+						post={{
+							data: {
+								title: post.title,
+								pubDate: post.date,
+								description: post.description,
+								heroImage: post.image,
+								categories: post.metadata.categories.map((tag) => tag)
+							},
+							slug: post.slug
+						}}
+					/>
 				))}
-				{recentPosts.length === 0 && (
-					<p class="no-posts">まだ記事がありません。</p>
-				)}
 			</section>
 			<div class="view-all">
 				<a href="/blog" class="view-all-link">すべての記事を見る &rarr;</a>
