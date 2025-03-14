@@ -10,14 +10,16 @@ export async function getStaticPaths() {
     const allPosts = await getAllPosts();
     
     // Extract all unique categories from all posts
-    const allCategories = [...new Set(allPosts.flatMap(post => post.metadata?.categories || []))];
+    const allCategories = [...new Set(allPosts.flatMap(post => {
+        const categories = post.metadata?.categories || [];
+        // 各カテゴリーが配列内の文字列であることを確認
+        return categories.map(cat => String(cat));
+    }))];
     
-    return allCategories.map(category => {
-        return {
-            params: { page: category.toLowerCase() },
-            props: { category }
-        };
-    });
+    return allCategories.map(category => ({
+        params: { page: category }, // 文字列として渡す
+        props: { category }
+    }));
 }
 
 interface Props {
