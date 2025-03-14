@@ -9,13 +9,13 @@ interface Props {
 const { post } = Astro.props;
 const title = post.title;
 const description = post.metadata?.description || '';
-const pubDate = post.metadata?.pubDate || post.created_at;
-const heroImage = post.metadata?.hero?.imgix_url || post.metadata?.heroImage;
+const pubdate = post.metadata?.pubDate || post.created_at;
+const heroimage = post.metadata?.hero?.imgix_url || post.metadata?.heroImage;
 const categories = post.metadata?.categories || [];
 ---
 <article class="article-card">
     <a href={`/blog/${post.slug}/`} class="article-link">
-        {heroImage && (
+        {heroimage && (
             <div class="article-image">
                 {categories && categories.length > 0 && (
                     <div class="article-tags">
@@ -24,13 +24,13 @@ const categories = post.metadata?.categories || [];
                         ))}
                     </div>
                 )}
-                <Image src={heroImage} alt={title} width={800} height={400} />
+                <Image src={heroimage} alt={title} width={800} height={400} />
             </div>
         )}
         <div class="article-content">
             <h2 class="article-title">{title}</h2>
             <p class="article-date">
-                <FormattedDate date={pubDate} />
+                <FormattedDate date={pubdate} />
             </p>
             <p class="article-description">{description}</p>
 

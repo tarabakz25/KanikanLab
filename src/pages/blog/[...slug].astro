@@ -58,18 +58,25 @@ let layoutProps: any = {
 };
 
 if (post) {
-    headings = extractHeadings(post.content || '');
+    // 変更点：contentがmetadataの中にあるように変更
+    const content = post.metadata?.content || '';
+    headings = extractHeadings(content);
     // Use marked.parse instead of marked for synchronous parsing
-    htmlContent = marked.parse(post.content || '') as string;
+    htmlContent = marked.parse(content) as string;
+
+    // 変更点：それぞれのフィールド名と構造を新しいレスポンス形式に合わせて修正
+    const categories = post.metadata?.categories 
+        ? post.metadata.categories.map(c => c.category) 
+        : [];
 
     // Map Cosmic data to BlogLayout props
     layoutProps = {
         title: post.title,
         description: post.metadata?.description || '',
-        pubDate: new Date(post.metadata?.pubDate || post.created_at),
+        pubDate: new Date(post.metadata?.pubdate || post.created_at), // pubdateが小文字になっている
         updatedDate: post.metadata?.updatedDate ? new Date(post.metadata.updatedDate) : undefined,
-        heroImage: post.metadata?.hero?.imgix_url || post.metadata?.heroImage,
-        categories: post.metadata?.categories || [],
+        heroImage: post.metadata?.heroimage?.imgix_url || post.metadata?.heroimage?.url, // heroimageが小文字になっている
+        categories: categories,
         headings
     };
 }

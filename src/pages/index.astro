@@ -37,9 +37,9 @@ const data = await getAllPosts()
 						post={{
 							data: {
 								title: post.title,
-								pubDate: post.date,
+								pubdate: post.date,
 								description: post.description,
-								heroImage: post.image,
+								heroimage: post.image,
 								categories: post.metadata.categories.map((tag) => tag)
 							},
 							slug: post.slug

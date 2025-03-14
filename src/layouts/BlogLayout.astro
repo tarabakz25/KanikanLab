@@ -11,14 +11,13 @@ import '../styles/blog.css';
 interface Props {
     title: string;
     description: string;
-    pubDate: Date;
-    updatedDate?: Date;
-    heroImage?: string;
+    pubdate: Date;
+    heroimage?: string;
     categories?: string[];
     headings?: { depth: number; slug: string; text: string }[];
 }
 
-const { title, description, pubDate, updatedDate, heroImage, categories, headings = [] } = Astro.props;
+const { title, description, pubdate, heroimage, categories, headings = [] } = Astro.props;
 ---
 <MainLayout>
     <div class="blog-container">
@@ -26,15 +25,15 @@ const { title, description, pubDate, updatedDate, heroImage, categories, heading
             <article class="blog-post">
                 <Breadcrumbs title={title} categories={categories} />
                 <div class="blog-header">
-                    {heroImage && (
+                    {heroimage && (
                         <div class="hero-image">
-                            <img src={import.meta.env.BASE_URL + heroImage.replace(/^\//, '')} alt={title} />
+                            <img src={import.meta.env.BASE_URL + heroimage.replace(/^\//, '')} alt={title} />
                         </div>
                     )}
                     <div class="blog-meta">
                         <h1 class="blog-title">{title}</h1>
                         <div class="blog-date">
-                            <span>公開日: <FormattedDate date={pubDate} /></span>
+                            <span>公開日: <FormattedDate date={pubdate} /></span>
                         </div>
                         {categories && categories.length > 0 && (
                             <div class="blog-categories">
