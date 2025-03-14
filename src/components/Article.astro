@@ -9,9 +9,9 @@ interface Props {
 const { post } = Astro.props;
 const title = post.title;
 const description = post.metadata?.description || '';
-const pubdate = post.metadata?.pubDate || post.created_at;
-const heroimage = post.metadata?.hero?.imgix_url || post.metadata?.heroImage;
-const categories = post.metadata?.categories || [];
+const pubdate = post.metadata?.pubdate || post.created_at;
+const heroimage = post.metadata?.heroimage?.imgix_url || post.metadata?.heroimage?.url;
+const categories = post.metadata?.categories?.map(c => c.category) || [];
 ---
 <article class="article-card">
     <a href={`/blog/${post.slug}/`} class="article-link">
@@ -19,12 +19,12 @@ const categories = post.metadata?.categories || [];
             <div class="article-image">
                 {categories && categories.length > 0 && (
                     <div class="article-tags">
-                        {categories.map((tag: string) => (
-                            <span class="tag"><i class="fas fa-tag"></i> {tag}</span>
+                        {categories.map((category: string) => (
+                            <span class="tag"><i class="fas fa-tag"></i> {category}</span>
                         ))}
                     </div>
                 )}
-                <Image src={heroimage} alt={title} width={800} height={400} />
+                <img src={heroimage} alt={title} width={800} height={400} />
             </div>
         )}
         <div class="article-content">
@@ -33,7 +33,6 @@ const categories = post.metadata?.categories || [];
                 <FormattedDate date={pubdate} />
             </p>
             <p class="article-description">{description}</p>
-
             <span class="read-more">続きを読む →</span>
         </div>
     </a>

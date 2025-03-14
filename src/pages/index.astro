@@ -33,18 +33,7 @@ const data = await getAllPosts()
 			<h2 class="section-title">最新の記事</h2>
 			<section class="recent-posts">
 				{data.map((post: any) => (
-					<Article
-						post={{
-							data: {
-								title: post.title,
-								pubdate: post.date,
-								description: post.description,
-								heroimage: post.image,
-								categories: post.metadata.categories.map((tag) => tag)
-							},
-							slug: post.slug
-						}}
-					/>
+					<Article post={post} />
 				))}
 			</section>
 			<div class="view-all">

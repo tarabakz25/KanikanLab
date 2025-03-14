@@ -1,13 +1,16 @@
 ---
-import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
-import  WriterLogo  from '../assets/placeholder-hero.png';
+import WriterLogo from '../assets/placeholder-hero.png';
+import { getAllPosts } from '../lib/cosmic';
 
-
-// Get all categories from blog posts
-const allPosts = await getCollection('blog');
+// Get all posts and extract categories
+const posts = await getAllPosts();
 // Extract all unique categories from all posts
-const allCategories = [...new Set(allPosts.flatMap(post => post.data.categories || []))];
+const allCategories = [...new Set(
+    posts.flatMap(post => 
+        post.metadata?.categories?.map(c => c.category) || []
+    )
+)];
 ---
 
 <div class="sidebar">
@@ -46,11 +49,10 @@ const allCategories = [...new Set(allPosts.flatMap(post => post.data.categories 
     <div class="sidebar-section">
         <h3 class="sidebar-title">カテゴリー</h3>
         <ul class="category-list">
-            {allCategories.map(categories => (
+            {allCategories.map(category => (
                 <li>
-                    <a href={`/blog/category/${categories}`} class="category-link">
-
-                        <i class="fas fa-tag"></i> {categories}
+                    <a href={`/blog/category/${category}`} class="category-link">
+                        <i class="fas fa-tag"></i> {category}
                     </a>
                 </li>
             ))}
