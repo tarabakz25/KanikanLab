@@ -1,4 +1,3 @@
-
 :root {
     /* デフォルト変数 */
     --bg-color: #ffffff;
@@ -6,16 +5,28 @@
     --hover-bg: rgba(0, 0, 0, 0.05);
     --accent-color: #4a6cf7;
     --accent-dark: #3a5bd0;
-    /* その他必要な変数 */
-    --font-japanese: "Apple SD Gothic Neo", sans-serif;
-    --font-english: "Anonymous Pro", sans-serif;
+    /* フォント設定 */
+    --font-japanese: "JetBrains Mono", "筑紫A丸ゴシック", sans-serif;
+    --font-english: "JetBrains Mono", monospace;
 }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
+    font-family: var(--font-japanese);
 }
 
+/* 英語テキスト用のクラスを追加 */
+.en {
+    font-family: var(--font-english);
+}
+
+/* コードブロックのフォントを更新 */
+code {
+    font-size: 0.85rem;
+    font-family: var(--font-english);
+    line-height: 1.4;
+}
 
 /* コードブロックのスタイリング */
 pre {
@@ -24,12 +35,6 @@ pre {
   background-color: #f5f5f5; /* 背景色 */
   border-radius: 4px; /* 角を丸くする */
   padding: 1rem; /* 内側の余白 */
-}
-
-code {
-  font-size: 0.85rem; /* コードのテキストサイズを小さく */
-  font-family: 'Monaco', 'Menlo', 'Consolas', monospace; /* コードフォント */
-  line-height: 1.4; /* 行の高さ */
 }
 
 /* インラインコードのスタイリング（本文中のコード） */
@@ -61,8 +66,6 @@ pre::after {
 pre:hover::after {
   opacity: 1;
 }
-
-u
 
 .category-link i {
     font-size: 0.8rem;
