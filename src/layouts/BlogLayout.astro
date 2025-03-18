@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import LikeAndShareBar from '../components/LikeAndShareBar.astro';
 
 import '../styles/blog.css';
 
@@ -15,12 +16,17 @@ interface Props {
     heroimage?: string;
     categories?: string[];
     headings?: { depth: number; slug: string; text: string }[];
+    blogId: string;
 }
 
-const { title, description, pubdate, heroimage, categories, headings = [] } = Astro.props;
+const { title, description, pubdate, heroimage, categories, headings = [], blogId } = Astro.props;
+
+// Debug: Log the blogId received by BlogLayout
+console.log('BlogLayout received blogId:', blogId);
 ---
 <MainLayout>
     <div class="blog-container">
+        <LikeAndShareBar blogId={blogId} />
         <div class="blog-main">
             <article class="blog-post">
                 <Breadcrumbs title={title} categories={categories} />

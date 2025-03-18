@@ -17,6 +17,10 @@
     --logo-filter: none; /* ライトモードではフィルターなし */
     --text-secondary: rgba(0, 0, 0, 0.6);
     
+    /* ボタン変数 */
+    --button-bg: #4a6cf7;
+    --button-text: #ffffff;
+    
     /* フォント設定 */
     --font-japanese: "JetBrains Mono", "筑紫A丸ゴシック", sans-serif;
     --font-english: "JetBrains Mono", monospace;
@@ -39,6 +43,10 @@
     --code-bg: #2d2d2d;
     --logo-filter: invert(1); /* ダークモードではロゴを反転 */
     --text-secondary: rgba(255, 255, 255, 0.6);
+    
+    /* ボタン変数（ダークモード） */
+    --button-bg: #6d8aff;
+    --button-text: #ffffff;
 }
 
 body {

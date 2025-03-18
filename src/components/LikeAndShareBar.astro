@@ -1,0 +1,117 @@
+---
+interface Props {
+    blogId: string;
+}
+
+const { blogId } = Astro.props;
+
+// Debug: Log the blogId received by LikeAndShareBar
+console.log('LikeAndShareBar received blogId:', blogId);
+---
+
+<div class="bar-container">
+    <button id="like-btn" data-blog-id={blogId} class="like-btn"><i class="fa-regular fa-heart"></i><span id="like-cnt">0</span></button>
+    <button id="share-btn" class="share-btn"><i class="fa-solid fa-share-from-square"></i><span id="share-cnt">0</span></button>
+</div>
+
+<style>
+    .bar-container {
+        display: flex;
+        margin: 2rem auto;
+        width: 200px;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: var(--card-bg);
+        border-radius: 10px;
+        box-shadow: 0 2px 5px var(--card-shadow);
+    }    
+    button {
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: bold;
+    }
+    
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px var(--card-shadow);
+    }
+    
+    button i {
+        font-size: 1.2rem;
+    }
+    
+    button span {
+        font-size: 1rem;
+    }
+</style>
+
+<script>
+    // Use Astro's client-side API for actions
+    const LikeBtn = document.getElementById('like-btn');
+    const LikeCnt = document.getElementById('like-cnt');
+    
+    if(LikeBtn && LikeCnt) {
+        const blogId = LikeBtn.dataset.blogId!;
+        console.log('BlogId from data attribute:', blogId);
+
+        // Call the getLike action using fetch API
+        console.log('Fetching initial like count for blogId:', blogId);
+        fetch(`/api/getLike?blogId=${encodeURIComponent(blogId)}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ blogId })
+        })
+        .then(response => {
+            console.log('getLike response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('getLike response data:', data);
+            if (data && data.LikeCount !== undefined) {
+                LikeCnt.innerText = String(data.LikeCount);
+            } else {
+                console.error('getLike returned undefined data.');
+            }
+
+            // Add click event listener for the like button
+            LikeBtn.addEventListener('click', async () => {
+                try {
+                    console.log('Like button clicked for blogId:', blogId);
+                    const response = await fetch(`/api/addLike?blogId=${encodeURIComponent(blogId)}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ blogId })
+                    });
+                    
+                    console.log('addLike response status:', response.status);
+                    const data = await response.json();
+                    console.log('addLike response data:', data);
+                    
+                    if (data && data.NewLikeCount !== undefined) {
+                        console.log('Updating like count to:', data.NewLikeCount);
+                        LikeCnt.innerText = String(data.NewLikeCount);
+                    } else {
+                        console.error('addLike returned undefined data.');
+                    }
+                } catch (error) {
+                    console.error('Error adding like:', error);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error getting like count:', error);
+        });
+    }
+</script>

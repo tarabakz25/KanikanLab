@@ -13,6 +13,7 @@ const pubdate = post.metadata?.pubdate || post.created_at;
 const heroimage = post.metadata?.heroimage?.imgix_url || post.metadata?.heroimage?.url;
 const categories = post.metadata?.categories?.map(c => c.category) || [];
 ---
+
 <article class="article-card">
     <a href={`/blog/${post.slug}/`} class="article-link">
         {heroimage && (

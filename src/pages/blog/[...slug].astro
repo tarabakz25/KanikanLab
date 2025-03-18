@@ -19,6 +19,11 @@ interface Props {
 const { slug } = Astro.props;
 const post = await getPostBySlug(slug);
 
+// Debug: Log the post object structure to see the ID field
+if (post) {
+    console.log('Post object structure:', JSON.stringify({id: post.id, _id: post._id}, null, 2));
+}
+
 // If post not found, show error page
 if (!post) {
     console.error(`Post not found: ${slug}`);
@@ -50,11 +55,14 @@ const extractHeadings = (content: string) => {
 // Only process content if post exists
 let headings: { depth: number; slug: string; text: string }[] = [];
 let htmlContent = '';
+// For testing, use a hardcoded ID
+const testBlogId = "test-blog-id-123";
 let layoutProps: any = {
     title: '記事が見つかりません',
     description: 'お探しの記事は見つかりませんでした。',
     pubDate: new Date(),
-    categories: []
+    categories: [],
+    blogId: testBlogId // Include the test ID even in the default props
 };
 
 if (post) {
@@ -69,9 +77,14 @@ if (post) {
         pubdate: new Date(post.metadata?.pubdate || post.created_at),
         heroimage: post.metadata?.heroimage?.imgix_url || post.metadata?.heroimage?.url,
         categories: post.metadata?.categories?.map(c => c.category) || [],
-        headings
+        headings,
+        blogId: testBlogId // Use a hardcoded ID for testing
     };
 }
+
+// Log the post object structure and the ID being used
+console.log('Post object structure:', post);
+console.log('Using hardcoded blogId for testing:', testBlogId);
 ---
 
 {post ? (

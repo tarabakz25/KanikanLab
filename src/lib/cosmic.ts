@@ -5,12 +5,17 @@ import { createBucketClient } from '@cosmicjs/sdk'
 const CONTENT_TYPE = 'posts';
 const COSMIC_BUCKET_SLUG="my-project-production-671831c0-0083-11f0-8cb2-45ee86b76b4d"
 const COSMIC_READ_KEY="o7WitYWb91SDZOMJV7q0Eov6Qu1i7w4GRRDlCQQUH39A3bPAzY"
+const COSMIC_WRITE_KEY="sB8bgJBLWJ8hN4QRbnRNTETxER7TPsJbjhoPYOk49I34qhzwSo"
 
 // Create the Cosmic client
 const cosmic = createBucketClient({
   bucketSlug: COSMIC_BUCKET_SLUG,
-  readKey: COSMIC_READ_KEY
+  readKey: COSMIC_READ_KEY,
+  writeKey: COSMIC_WRITE_KEY,
 })
+
+// Export the client for use in other files
+export const client = cosmic;
 
 // Helper function to log errors
 function logError(error: any, context: string) {
