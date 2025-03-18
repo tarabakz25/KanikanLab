@@ -37,10 +37,10 @@ const categories = post.metadata?.categories?.map(c => c.category) || [];
 </article>
 <style>
     .article-card {
-        background-color: var(--color-bg-secondary);
+        background-color: var(--card-bg);
         border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px var(--card-shadow);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         margin-bottom: 2rem;
         display: flex;
@@ -50,14 +50,14 @@ const categories = post.metadata?.categories?.map(c => c.category) || [];
 
     .article-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 15px var(--card-shadow);
     }
 
     .article-link {
         display: flex;
         flex-direction: column;
         height: 100%;
-        color: inherit;
+        color: var(--text-color);
         text-decoration: none;
     }
 
@@ -91,13 +91,13 @@ const categories = post.metadata?.categories?.map(c => c.category) || [];
     .article-title {
         margin: 0 0 0.5rem 0;
         font-size: 1.5rem;
-        color: var(--color-text);
+        color: var(--text-color);
         text-align: left;
     }
 
     .article-date {
         font-size: 0.9rem;
-        color: var(--color-text-light);
+        color: var(--text-secondary);
         margin-bottom: 1rem;
         text-align: left;
         font-family: 'anonmous pro', monospace;
@@ -105,14 +105,14 @@ const categories = post.metadata?.categories?.map(c => c.category) || [];
 
     .article-description {
         margin-bottom: 1rem;
-        color: var(--color-text);
+        color: var(--text-color);
         line-height: 1.5;
         text-align: left;
     }
 
     .read-more {
         display: inline-block;
-        color: var(--color-primary);
+        color: var(--accent-color);
         font-weight: 500;
         text-align: left;
     }
@@ -129,8 +129,8 @@ const categories = post.metadata?.categories?.map(c => c.category) || [];
     }
 
     .tag {
-        background-color: var(--color-primary);
-        color: white;
+        background-color: var(--bg-color);
+        color: var(--text-color);
         padding: 5px 10px;
         border-radius: 20px;
         font-size: 0.8rem;
@@ -138,7 +138,7 @@ const categories = post.metadata?.categories?.map(c => c.category) || [];
         display: flex;
         align-items: center;
         gap: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 4px var(--card-shadow);
         transition: all 0.3s ease;
     }
 
@@ -148,7 +148,7 @@ const categories = post.metadata?.categories?.map(c => c.category) || [];
 
     .tag:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 6px var(--card-shadow);
     }
 
     @media (max-width: 768px) {

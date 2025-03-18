@@ -80,6 +80,19 @@ import '../styles/global.css';
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+		
+		<!-- テーマ初期化スクリプト -->
+		<script is:inline>
+			// ページロード時にすぐテーマを適用するためのスクリプト
+			const savedTheme = localStorage.getItem('theme');
+			if (savedTheme) {
+				document.documentElement.setAttribute('data-theme', savedTheme);
+			} else {
+				// システム設定に基づいて自動的にテーマを設定（オプション）
+				const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+				document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+			}
+		</script>
 	</head>
 	<body>
 		<Header />

@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Logo from '../assets/KanikanLab.svg';
+import ThemeToggle from './ThemeToggle.astro';
 ---
 
 <div class="header__inner">
@@ -11,6 +12,7 @@ import Logo from '../assets/KanikanLab.svg';
     <div class="menu-container">
         <a href="/about" class="about-text header-menu">About</a>
         <a href="/blog" class="blog-text header-menu">Blog</a>
+        <ThemeToggle />
     </div>
 </div>
 <style>
@@ -24,7 +26,7 @@ import Logo from '../assets/KanikanLab.svg';
         align-items: center;
         justify-content: space-between;
         background-color: var(--header-bg);
-        border-bottom: 1px solid rgb(204, 204, 204);
+        border-bottom: 1px solid var(--border-color);
         box-sizing: border-box;
     }
 
@@ -38,10 +40,13 @@ import Logo from '../assets/KanikanLab.svg';
     .header__inner .header__logo {
         width: 40px;
         height: 40px;
+        filter: var(--logo-filter);
     }
     .menu-container {
         display: flex;
         gap: 60px;
+        align-items: center;
+        justify-content: center;
     }
     .header__inner span {
         font-family: 'Krok', sans-serif;

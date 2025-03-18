@@ -1,13 +1,44 @@
 :root {
-    /* デフォルト変数 */
+    /* ライトモード（デフォルト）変数 */
     --bg-color: #ffffff;
     --text-color: #000000;
     --hover-bg: rgba(0, 0, 0, 0.05);
     --accent-color: #4a6cf7;
     --accent-dark: #3a5bd0;
+    --header-bg: #ffffff;
+    
+    /* 追加変数 */
+    --border-color: rgb(204, 204, 204);
+    --card-bg: #ffffff;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    --sidebar-bg: #f8f9fa;
+    --sidebar-border: #e9ecef;
+    --code-bg: #f5f5f5;
+    --logo-filter: none; /* ライトモードではフィルターなし */
+    --text-secondary: rgba(0, 0, 0, 0.6);
+    
     /* フォント設定 */
     --font-japanese: "JetBrains Mono", "筑紫A丸ゴシック", sans-serif;
     --font-english: "JetBrains Mono", monospace;
+}
+
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --accent-color: #6d8aff;
+    --accent-dark: #5a77e0;
+    --header-bg: #1e1e1e;
+    
+    /* 追加変数（ダークモード） */
+    --border-color: #333333;
+    --card-bg: #1e1e1e;
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    --sidebar-bg: #252525;
+    --sidebar-border: #333333;
+    --code-bg: #2d2d2d;
+    --logo-filter: invert(1); /* ダークモードではロゴを反転 */
+    --text-secondary: rgba(255, 255, 255, 0.6);
 }
 
 body {
@@ -32,7 +63,7 @@ code {
 pre {
   overflow-x: auto; /* 横方向のスクロールを有効化 */
   max-width: 100%; /* 親要素の幅を超えないようにする */
-  background-color: #f5f5f5; /* 背景色 */
+  background-color: var(--code-bg);
   border-radius: 4px; /* 角を丸くする */
   padding: 1rem; /* 内側の余白 */
 }
@@ -57,7 +88,7 @@ pre::after {
   top: 0;
   bottom: 0;
   width: 20px;
-  background: linear-gradient(to right, rgba(245, 245, 245, 0), rgba(245, 245, 245, 1));
+  background: linear-gradient(to right, rgba(0, 0, 0, 0), var(--code-bg));
   pointer-events: none; /* スクロールに影響しないように */
   opacity: 0;
   transition: opacity 0.3s;
