@@ -55,22 +55,35 @@ const extractHeadings = (content: string) => {
 // Only process content if post exists
 let headings: { depth: number; slug: string; text: string }[] = [];
 let htmlContent = '';
-// For testing, use a hardcoded ID
-const testBlogId = "test-blog-id-123";
 let layoutProps: any = {
     title: '記事が見つかりません',
     description: 'お探しの記事は見つかりませんでした。',
     pubDate: new Date(),
     categories: [],
-    blogId: testBlogId // Include the test ID even in the default props
+    blogId: '' // 一時的にデフォルト値を空文字列に
+};
+
+const getBlogId = (post: any) => {
+    // 可能性のあるすべてのIDプロパティを試す
+    const possibleIds = ['id', '_id', 'objectId'];
+    for (const idKey of possibleIds) {
+        if (post[idKey]) return post[idKey];
+    }
+    return '';
 };
 
 if (post) {
+    console.log('Complete post object:', post); // デバッグ用
+
     const content = post.metadata?.content || '';
     headings = extractHeadings(content);
     htmlContent = marked.parse(content) as string;
 
-    // Map Cosmic data to BlogLayout props
+    // Cosmicの_idを使用
+    const blogId = post._id || post.id;
+    
+    console.log('Using blogId:', blogId); // デバッグ用
+
     layoutProps = {
         title: post.title,
         description: post.metadata?.description || '',
@@ -78,13 +91,16 @@ if (post) {
         heroimage: post.metadata?.heroimage?.imgix_url || post.metadata?.heroimage?.url,
         categories: post.metadata?.categories?.map(c => c.category) || [],
         headings,
-        blogId: testBlogId // Use a hardcoded ID for testing
+        blogId // 必ずblogIdを設定
     };
 }
 
+// 最終的なlayoutPropsの確認
+console.log('Final layoutProps blogId:', layoutProps.blogId);
+
 // Log the post object structure and the ID being used
 console.log('Post object structure:', post);
-console.log('Using hardcoded blogId for testing:', testBlogId);
+console.log('Using hardcoded blogId for testing:', post?._id || '');
 ---
 
 {post ? (

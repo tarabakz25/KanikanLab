@@ -53,12 +53,24 @@ export async function getPostBySlug(slug: string) {
         type: CONTENT_TYPE,
         slug: slug
       })
-      .props('title,slug,metadata,content,created_at')
-      .depth(1)
+      .props('_id,id,title,slug,metadata,content,created_at')
+      .depth(1);
     
+    if (!data.object) {
+      console.error('No post found for slug:', slug);
+      return null;
+    }
+
+    // デバッグ情報を追加
+    console.log('Post ID information:', {
+      _id: data.object._id,
+      id: data.object.id,
+      slug: data.object.slug
+    });
+
     return data.object;
   } catch (error) {
-    logError(error, `getPostBySlug(${slug})`);
+    console.error('Error in getPostBySlug:', error);
     return null;
   }
 }

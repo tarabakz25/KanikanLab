@@ -26,7 +26,6 @@ console.log('BlogLayout received blogId:', blogId);
 ---
 <MainLayout>
     <div class="blog-container">
-        <LikeAndShareBar blogId={blogId} />
         <div class="blog-main">
             <article class="blog-post">
                 <Breadcrumbs title={title} categories={categories} />
@@ -72,14 +71,35 @@ console.log('BlogLayout received blogId:', blogId);
         </div>
     </div>
 </MainLayout>
+
 <style>
     .blog-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 5rem 1rem;
+        padding: 5rem 0 5rem 0.2rem;
         display: grid;
-        grid-template-columns: 3fr 1fr;
-        gap: 2rem;
+        grid-template-columns: 50px minmax(0, 3fr) 250px;
+        grid-template-areas: "like-share main sidebar";
+        gap: 1rem;
+    }
+    
+    .like-share-bar {
+        grid-area: like-share;
+        position: sticky;
+        top: 5rem;
+        height: fit-content;
+        width: 50px;
+    }
+    
+    .blog-main {
+        grid-area: main;
+    }
+    
+    .blog-sidebar {
+        grid-area: sidebar;
+        position: relative;
+        height: auto;
+        width: 300px;
     }
     
     .blog-post {
@@ -91,7 +111,8 @@ console.log('BlogLayout received blogId:', blogId);
     }
 
     .hero-image {
-        width: 850px;
+        width: 100%;
+        max-width: 850px;
         height: 400px;
         overflow: hidden;
         border-radius: 8px;
@@ -252,10 +273,32 @@ console.log('BlogLayout received blogId:', blogId);
     @media (max-width: 768px) {
         .blog-container {
             grid-template-columns: 1fr;
+            grid-template-areas: 
+                "main"
+                "sidebar";
+            padding: 3rem 0.5rem;
+        }
+        
+        .like-share-bar {
+            position: fixed;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-color);
+            padding: 10px 3px;
+            border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .blog-sidebar {
+            position: relative;
+            width: 100%;
         }
 
         .hero-image {
             height: 200px;
+            width: 100%;
         }
 
         .blog-title {

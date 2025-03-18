@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import WriterLogo from '../assets/placeholder-hero.png';
 import { getAllPosts } from '../lib/cosmic';
+import LikeAndShareBar from './LikeAndShareBar.astro';
 
 // Get all posts and extract categories
 const posts = await getAllPosts();
