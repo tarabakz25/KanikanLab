@@ -16,8 +16,10 @@ interface Props {
     slug: string;
 }
 
-const { slug } = Astro.props;
+const { slug } = Astro.params;
+console.log('要求されたスラッグ:', slug);
 const post = await getPostBySlug(slug);
+console.log('取得された記事:', post?.title, post?.slug);
 
 // Debug: Log the post object structure to see the ID field
 if (post) {
@@ -91,7 +93,8 @@ if (post) {
         heroimage: post.metadata?.heroimage?.imgix_url || post.metadata?.heroimage?.url,
         categories: post.metadata?.categories?.map(c => c.category) || [],
         headings,
-        blogId // 必ずblogIdを設定
+        blogId,
+        slug: slug // スラッグを明示的に渡す
     };
 }
 

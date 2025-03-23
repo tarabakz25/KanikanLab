@@ -15,7 +15,7 @@ const categories = post.metadata?.categories?.map(c => c.category) || [];
 ---
 
 <article class="article-card">
-    <a href={`/blog/${post.slug}/`} class="article-link">
+    <a href={`/blog/${post.slug}`} class="article-link">
         {heroimage && (
             <div class="article-image">
                 {categories && categories.length > 0 && (
