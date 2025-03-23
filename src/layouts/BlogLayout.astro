@@ -23,6 +23,8 @@ const { title, description, pubdate, heroimage, categories, headings = [], blogI
 
 // Debug: Log the blogId received by BlogLayout
 console.log('BlogLayout received blogId:', blogId);
+
+const { slug } = Astro.props.frontmatter || Astro.props;
 ---
 <MainLayout>
     <div class="blog-container">
@@ -58,6 +60,7 @@ console.log('BlogLayout received blogId:', blogId);
                     <slot />
                 </div>
                 <div class="blog-footer">
+                    <LikeAndShareBar slug={slug} title={title} />
                     <a href="/blog" class="back-link">← ブログ一覧に戻る</a>
                 </div>
             </article>
@@ -200,16 +203,68 @@ console.log('BlogLayout received blogId:', blogId);
         color: var(--text-color);
     }
 
+    .blog-content :global(h1) {
+        font-size: 2rem;
+        margin: 2rem 0 1rem 0;
+        color: var(--text-color);
+        position: relative;
+        padding-left: 2.5rem;
+    }
+
+    .blog-content :global(h1)::before {
+        content: "#";
+        position: absolute;
+        left: 0;
+        color: var(--text-color);
+        margin-right: 1rem;
+    }
+
     .blog-content :global(h2) {
         font-size: 1.8rem;
         margin: 2rem 0 1rem 0;
         color: var(--text-color);
+        position: relative;
+        padding-left: 3rem;
+    }
+
+    .blog-content :global(h2)::before {
+        content: "##";
+        position: absolute;
+        left: 0;
+        color: var(--text-color);
+        margin-right: 1rem;
     }
 
     .blog-content :global(h3) {
         font-size: 1.5rem;
         margin: 1.5rem 0 1rem 0;
         color: var(--text-color);
+        position: relative;
+        padding-left: 3.5rem;
+    }
+
+    .blog-content :global(h3)::before {
+        content: "###";
+        position: absolute;
+        left: 0;
+        color: var(--text-color);
+        margin-right: 1rem;
+    }
+
+    .blog-content :global(h4) {
+        font-size: 1.3rem;
+        margin: 1.5rem 0 1rem 0;
+        color: var(--text-color);
+        position: relative;
+        padding-left: 4rem;
+    }
+
+    .blog-content :global(h4)::before {
+        content: "####";
+        position: absolute;
+        left: 0;
+        color: var(--text-color);
+        margin-right: 1rem;
     }
 
     .blog-content :global(p) {
