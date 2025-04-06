@@ -82,20 +82,35 @@ export async function getPostsByCategory(categoryName: string, limit: number = 1
     
     // まず全ての記事を取得
     const allPosts = await getAllPosts();
+    console.log(`全記事数: ${allPosts.length}`);
+    
+    // カテゴリー形式のサンプルをログ出力
+    if (allPosts.length > 0 && allPosts[0].metadata?.categories) {
+      console.log(`カテゴリー形式サンプル: ${JSON.stringify(allPosts[0].metadata.categories)}`);
+    }
     
     // カテゴリーでフィルタリング（クライアント側で処理）
     const filteredPosts = allPosts.filter(post => {
       const categories = post.metadata?.categories || [];
-      return categories.some(cat => 
+      const categoryStrings = categories.map(cat => 
+        typeof cat === 'object' && cat.category ? cat.category : cat
+      );
+      
+      console.log(`記事「${post.title}」のカテゴリー: ${JSON.stringify(categoryStrings)}`);
+      
+      const hasCategory = categories.some(cat => 
         (typeof cat === 'object' && cat.category === categoryName) || 
         cat === categoryName
       );
+      
+      console.log(`記事「${post.title}」は「${categoryName}」カテゴリーに${hasCategory ? '含まれます' : '含まれません'}`);
+      return hasCategory;
     });
     
-    console.log(`Found ${filteredPosts.length} posts in category ${categoryName}`);
+    console.log(`カテゴリー「${categoryName}」に該当する記事: ${filteredPosts.length}件`);
     return filteredPosts;
   } catch (error) {
-    logError(error, `getPostsByCategory(${categoryName})`);
+    console.error(`カテゴリー「${categoryName}」の記事取得中にエラー発生:`, error);
     return [];
   }
 }
