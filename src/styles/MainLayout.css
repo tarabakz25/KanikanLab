@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh; /* height: 100% だとコンテンツが少ない場合にFooterが画面下に来ないことがある */
+    display: flex; /* Footerを最下部に固定するため */
+    flex-direction: column; /* Footerを最下部に固定するため */
+}
+main { /* slotをmainタグで囲むことを推奨 */
+    flex: 1; /* Footerを最下部に固定するため */
+}
+.crevice {
+    height: 80px; /* Headerの高さに応じて調整 */
+}

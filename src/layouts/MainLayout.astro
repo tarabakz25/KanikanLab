@@ -3,17 +3,78 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 import '../styles/global.css';
+import '../styles/MainLayout.css';
+
+import { Image } from 'astro:assets';
+import  Title  from '../assets/title.jpg'
+
+// ページ固有のOGP情報をpropsとして受け取る (任意)
+const { 
+    title = "KanikanLab", 
+    description = "神山まるごと高専一期生。 旅行、生成AI、テクノロジーを追って日々精進中。",
+    image = Title
+} = Astro.props;
+
+// canonicalURLの生成を Astro.site が存在する場合のみに限定（より安全に）
+let canonicalURL;
+try {
+    // Astro.site が設定されているか確認
+    if (Astro.site) {
+        canonicalURL = new URL(Astro.url.pathname, Astro.site);
+    } else {
+        // Astro.site が未設定の場合、相対パスのままにするか、エラーログを出すなど検討
+        console.warn("Astro.site is not configured in astro.config.mjs. Canonical and OGP URLs might be relative.");
+        canonicalURL = Astro.url; // Astro.URLオブジェクトをそのまま使う（絶対URLにはならない）
+    }
+} catch (e) {
+    console.error("Error creating canonical URL:", e);
+    canonicalURL = Astro.url; // エラー時もフォールバック
+}
+
+// OGP画像のURL生成もAstro.siteの存在を確認
+let ogpImageURL = image; // デフォルトは渡されたパスのまま
+try {
+    if (Astro.site && image && !image.startsWith('http')) { // Astro.siteがあり、imageが相対パスの場合
+        ogpImageURL = new URL(image, Astro.site).toString();
+    } else if (image && image.startsWith('http')) { // imageが既に絶対URLの場合
+        ogpImageURL = image;
+    }
+} catch (e) {
+     console.error("Error creating OGP image URL:", e);
+     // エラー時は元のimageパスを使用 (デバッグしやすいように)
+     ogpImageURL = image; 
+}
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 	<head>
 
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>KanikanLab</title>
+		
+        <!-- 基本的なメタタグ -->
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        {canonicalURL && <link rel="canonical" href={canonicalURL.toString()} />}
+
+        <!-- OGP タグ -->
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        {ogpImageURL && <meta property="og:image" content={ogpImageURL} />}
+        {canonicalURL && <meta property="og:url" content={canonicalURL.toString()} />}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="KanikanLab" />
+
+        <!-- Twitter カード タグ -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {ogpImageURL && <meta name="twitter:image" content={ogpImageURL} />}
+        {/* <meta name="twitter:site" content="@あなたのTwitterユーザー名" /> */}
+
 		<script src="https://kit.fontawesome.com/f3eb574e3f.js" crossorigin="anonymous"></script>
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-E447BSCFR8"></script>
@@ -24,9 +85,6 @@ import '../styles/global.css';
 
 		gtag('config', 'G-E447BSCFR8');
 		</script>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width">
-		<meta name="generator" content={Astro.generator}>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p&family=Zen+Old+Mincho&display=swap" rel="stylesheet">
@@ -50,21 +108,20 @@ import '../styles/global.css';
 				h.className += ' wf-loading';
 				tk.src = 'https://use.typekit.net/' + config.kitId + '.js';
 				tk.async = true;
-				tk.addEventListener('load', function() {
+				tk.onload = tk.onreadystatechange = function() { // onloadとonreadystatechangeをまとめる
+					a = this.readyState;
+					if (f || a && a != "complete" && a != "loaded") return;
 					f = true;
 					clearTimeout(t);
 					try {
 						Typekit.load(config);
 					} catch (e) {}
-					tk.parentNode?.removeChild(tk);
-				});
-	
-				tk.addEventListener('error', function() {
-					h.className = h.className.replace(/\bwf-loading\b/g, '') + ' wf-inactive';
-					clearTimeout(t);
-				});
-	
-				document.head.appendChild(tk);
+                    // Typekitスクリプト読み込み後の削除処理は不要な場合があるためコメントアウト検討
+					// tk.parentNode?.removeChild(tk); 
+				};
+                // エラーハンドリングはTypekitが提供しているか確認、なければ必要に応じて追加
+				// tk.addEventListener('error', function() { ... });
+				s.parentNode.insertBefore(tk, s)
 			})(document);
 		</script>
 		<script>
@@ -101,14 +158,3 @@ import '../styles/global.css';
 		<Footer />
 	</body>
 </html>
-
-<style>
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-	.crevice {
-		height: 80px;
-	}
-</style>
