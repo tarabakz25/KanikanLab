@@ -4,9 +4,12 @@ import { getAllPosts, getPostBySlug } from '../../lib/cosmic';
 import { marked } from 'marked';
 import MainLayout from '../../layouts/MainLayout.astro';
 
+// 静的プリレンダリングを有効にする（オプション）
+export const prerender = true;
+
 export async function getStaticPaths() {
     const posts = await getAllPosts();
-    return posts.map((post) => ({
+    return posts.map((post: any) => ({
         params: { slug: post.slug },
         props: { slug: post.slug },
     }));
@@ -16,109 +19,116 @@ interface Props {
     slug: string;
 }
 
+// ヘッディングの型定義
+interface Heading {
+    depth: number;
+    slug: string;
+    text: string;
+}
+
 const { slug } = Astro.params;
 console.log('要求されたスラッグ:', slug);
-const post = await getPostBySlug(slug);
-console.log('取得された記事:', post?.title, post?.slug);
-
-// Debug: Log the post object structure to see the ID field
-if (post) {
-    console.log('Post object structure:', JSON.stringify({id: post.id, _id: post._id}, null, 2));
-}
-
-// If post not found, show error page
-if (!post) {
-    console.error(`Post not found: ${slug}`);
-}
-
-// Extract headings from content for table of contents
-const extractHeadings = (content: string) => {
-    const headings: { depth: number; slug: string; text: string }[] = [];
-    
-    // Simple regex to extract headings
-    const headingRegex = /^(#{1,6})\s+(.+)$/gm;
-    let match;
-    
-    while ((match = headingRegex.exec(content)) !== null) {
-        const level = match[1].length;
-        const text = match[2].trim();
-        const slug = text.toLowerCase().replace(/[^\w]+/g, '-');
-        
-        headings.push({
-            depth: level,
-            slug,
-            text
-        });
-    }
-    
-    return headings;
-};
-
-// Only process content if post exists
-let headings: { depth: number; slug: string; text: string }[] = [];
+let post: any;
+let headings: Heading[] = [];
+let blogId = '';
+let layoutProps: any;
 let htmlContent = '';
-let layoutProps: any = {
-    title: '記事が見つかりません',
-    description: 'お探しの記事は見つかりませんでした。',
-    pubDate: new Date(),
-    categories: [],
-    blogId: '' // 一時的にデフォルト値を空文字列に
-};
 
-const getBlogId = (post: any) => {
-    // 可能性のあるすべてのIDプロパティを試す
-    const possibleIds = ['id', '_id', 'objectId'];
-    for (const idKey of possibleIds) {
-        if (post[idKey]) return post[idKey];
-    }
-    return '';
-};
-
-if (post) {
-    console.log('Complete post object:', post); // デバッグ用
-
-    const content = post.metadata?.content || '';
-    headings = extractHeadings(content);
-    htmlContent = marked.parse(content) as string;
-
-    // Cosmicの_idを使用
-    const blogId = post._id || post.id;
+try {
+    post = await getPostBySlug(slug);
     
-    console.log('Using blogId:', blogId); // デバッグ用
+    if (post) {
+        console.log('Post object structure:', {
+            id: post.id
+        });
+        console.log('Complete post object:', post);
+        
+        // post.idが存在する場合はblogIdに設定
+        blogId = post.id || '';
+        console.log('Using blogId:', blogId);
+        
+        // Extract headings from content for table of contents
+        const extractHeadings = (content: string): Heading[] => {
+            const headings: Heading[] = [];
+            
+            // Simple regex to extract headings
+            const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+            let match;
+            
+            while ((match = headingRegex.exec(content)) !== null) {
+                const level = match[1].length;
+                const text = match[2].trim();
+                const slug = text.toLowerCase().replace(/[^\w]+/g, '-');
+                
+                headings.push({
+                    depth: level,
+                    slug,
+                    text
+                });
+            }
+            
+            return headings;
+        };
 
+        const content = post.metadata?.content || '';
+        headings = extractHeadings(content);
+        htmlContent = await marked.parse(content) as string;
+        
+        layoutProps = {
+            title: post.title,
+            description: post.metadata?.description || '',
+            pubdate: new Date(post.metadata?.pubdate || post.created_at),
+            heroimage: post.metadata?.heroimage?.imgix_url || post.metadata?.heroimage?.url,
+            categories: post.metadata?.categories?.map((c: any) => c.category) || [],
+            headings, 
+            blogId,   
+            slug      // スラッグを渡す
+        };
+        
+        console.log('Final layoutProps blogId:', layoutProps.blogId);
+    } else {
+        // 記事が見つからない場合の処理
+        layoutProps = {
+            title: '記事が見つかりません',
+            description: '',
+            pubdate: new Date(),
+            heroimage: '',
+            categories: [],
+            headings: [], 
+            blogId: '',
+            slug
+        };
+    }
+} catch (error) {
+    console.error('記事取得エラー:', error);
+    
+    // エラー時のフォールバック
     layoutProps = {
-        title: post.title,
-        description: post.metadata?.description || '',
-        pubdate: new Date(post.metadata?.pubdate || post.created_at),
-        heroimage: post.metadata?.heroimage?.imgix_url || post.metadata?.heroimage?.url,
-        categories: post.metadata?.categories?.map(c => c.category) || [],
-        headings,
-        blogId,
-        slug: slug // スラッグを明示的に渡す
+        title: 'エラーが発生しました',
+        description: '',
+        pubdate: new Date(),
+        heroimage: '',
+        categories: [],
+        headings: [],
+        blogId: '',
+        slug
     };
 }
 
 // 最終的なlayoutPropsの確認
 console.log('Final layoutProps blogId:', layoutProps.blogId);
-
-// Log the post object structure and the ID being used
-console.log('Post object structure:', post);
-console.log('Using hardcoded blogId for testing:', post?._id || '');
 ---
 
-{post ? (
-    <BlogLayout {...layoutProps}>
+<BlogLayout {...layoutProps}>
+    {post ? (
         <div set:html={htmlContent} />
-    </BlogLayout>
-) : (
-    <MainLayout>
-        <div class="error-container">
-            <h1>記事が見つかりません</h1>
-            <p>お探しの記事は見つかりませんでした。</p>
-            <a href="/blog" class="back-link">← ブログ一覧に戻る</a>
+    ) : (
+        <div class="error-message">
+            <h1>記事が見つかりませんでした</h1>
+            <p><a href="/blog">ブログ一覧に戻る</a></p>
         </div>
-    </MainLayout>
-)}
+    )}
+</BlogLayout>
 
 <style>
     .error-container {

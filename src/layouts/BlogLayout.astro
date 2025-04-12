@@ -5,11 +5,11 @@ import TableOfContents from '../components/TableOfContents.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import LikeAndShareBar from '../components/LikeAndShareBar.astro';
-import { format } from 'date-fns';
 import { Image } from 'astro:assets';
 
 import '../styles/blog.css';
 import '../styles/BlogLayout.css';
+
 
 
 interface Props {
@@ -20,23 +20,27 @@ interface Props {
     categories?: string[];
     headings?: { depth: number; slug: string; text: string }[];
     blogId: string;
+    slug?: string; // slugプロパティを追加
 }
 
-const { title, description, pubdate, heroimage, categories, headings = [], blogId } = Astro.props;
+const { title = '記事が見つかりません', description = '', pubdate, heroimage, categories = [], headings = [], blogId = '', slug = '' } = Astro.props;
 
 // Debug: Log the blogId received by BlogLayout
 console.log('BlogLayout received blogId:', blogId);
 
-const { slug } = Astro.props.frontmatter || Astro.props;
+// 重複宣言を避けるため、別の変数名を使う
+const currentSlug = slug;
 
 // Propsから記事データを取得
-const { frontmatter: post } = Astro.props;
+// const { frontmatter: post } = Astro.props; // この行を削除
 
 // OGP情報を設定
-const pageTitle = post.title ? `${post.title} | KanikanLab` : 'KanikanLab';
-const pageDescription = post.metadata?.excerpt || post.metadata?.description || 'KanikanLabのブログ記事'; // 抜粋があれば使う
-// ↓ ヘッダー画像のURLを特定 (実際のキー名に置き換えてください)
-const ogpImage = post.metadata?.hero?.imgix_url || '/default-ogp-image.png'; // デフォルト画像を指定
+const pageTitle = title ? `${title} | KanikanLab` : 'KanikanLab'; // post.title の代わりに title を使用
+const pageDescription = description || 'KanikanLabのブログ記事'; // post.metadata?.excerpt や post.metadata?.description の代わりに description を使用
+// Calculate OGP image URL using heroimage prop, handling relative/absolute paths
+const ogpImage = heroimage
+    ? (heroimage.startsWith('http') ? heroimage : (import.meta.env.BASE_URL + heroimage.replace(/^\//, '')))
+    : '/default-ogp-image.png'; // post.metadata?.hero?.imgix_url の代わりに heroimage を使用し、パスを解決
 
 // デバッグ用に画像URLをログ出力
 console.log("OGP Image URL:", ogpImage);
@@ -53,7 +57,7 @@ console.log("OGP Image URL:", ogpImage);
                                 src={heroimage.startsWith('http') ? heroimage : import.meta.env.BASE_URL + heroimage.replace(/^\//, '')} 
                                 alt={title} 
                                 width={800}
-                                aspectRatio="16:9"
+                                height={450}
                                 class="post-hero-image"
                             />
                         </div>
@@ -66,7 +70,7 @@ console.log("OGP Image URL:", ogpImage);
                         {categories && categories.length > 0 && (
                             <div class="blog-categories">
                                 {categories.map((category) => (
-                                    <a href={`/blog/category/${category}`} class="category-link">
+                                    <a href={`/blog/category/${category}`} class="title-category-link">
                                         <i class="fas fa-tag"></i> {category}
                                     </a>
                                 ))}
@@ -78,7 +82,7 @@ console.log("OGP Image URL:", ogpImage);
                     <slot />
                 </div>
                 <div class="blog-footer">
-                    <LikeAndShareBar slug={slug} title={title} />
+                    <LikeAndShareBar slug={currentSlug} title={title} />
                     <a href="/blog" class="back-link">← ブログ一覧に戻る</a>
                 </div>
             </article>

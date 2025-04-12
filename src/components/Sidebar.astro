@@ -199,7 +199,7 @@ console.log('Sidebar categories:', allCategories);
         text-align: left;
     }
     .category-list li {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.1rem;
     }
 
     .category-link {
@@ -207,12 +207,23 @@ console.log('Sidebar categories:', allCategories);
         padding: 0.5rem;
         text-decoration: none;
         color: var(--text-color);
-        border-radius: 4px;
-        transition: background-color 0.3s ease;
+        position: relative;
+        transition: transform 0.3s ease;
     }
 
-    .category-link:hover {
-        background-color: var(--hover-bg);
+    .category-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 0;
+        background-color: var(--text-color);
+        transition: width 0.3s ease;
+    }
+
+    .category-link:hover::after {
+        width: 100%;
     }
 
     @media (max-width: 768px) {
